@@ -5,7 +5,7 @@
 - dp-LTE：[http://git.oschina.net/zhocuhenglin/dp-security/](http://git.oschina.net/zhocuhenglin/dp-security/)
 - dp-PRO：[http://git.oschina.net/zhocuhenglin/dp-pro](http://git.oschina.net/zhocuhenglin/dp-pro)
 - dp-GEN：[http://git.oschina.net/zhocuhenglin/dp-generator](http://git.oschina.net/zhocuhenglin/dp-generator)
-- dp-BOOT：[https://gitee.com/zhocuhenglin/dp-BOOT](https://gitee.com/zhocuhenglin/dp-boot)
+- dp-BOOT：[https://gitee.com/zhocuhenglin/dp-boot](https://gitee.com/zhocuhenglin/dp-BOOT)
 - 项目文档：[http://dp-dev.mydoc.io/](http://dp-dev.mydoc.io/)
 
 ### 项目介绍
