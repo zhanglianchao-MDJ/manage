@@ -259,7 +259,7 @@ public class GenUtils {
 			String packageName) {
 		String packagePath = "java" + File.separator;
 		if (StringUtils.isNotBlank(packageName)) {
-			packagePath += packageName.replace(".", File.separator) + File.separator + "module" + File.separator + module + File.separator;
+			packagePath += packageName.replace(".", File.separator) + File.separator + "modules" + File.separator + module + File.separator;
 		}
 
 		if (template.contains("Entity.java.vm")) {
