@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging><!-- clean package -f pom-war.xml -->
 
-	<name>dp</name>
+	<name>dp-lte-boot</name>
 	<description>dp开发框架SpringBoot版本</description>
 
 	<parent>
