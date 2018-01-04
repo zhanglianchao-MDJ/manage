@@ -42,15 +42,15 @@
 -  修改的方法用 update 做前缀
 
 ### 应用分层（参考阿里巴巴Java开发手册）
-![image](http://chenlintech.com:8080/statics/common/0.png)
+![image](http://oss.chenlintech.com/common/0.png)
 
 ### 项目演示
 - 演示地址：[http://dp.chenlintech.com](http://dp.chenlintech.com)
 - 账号密码：admin / 1
 
 ### 运行效果
-![image](http://chenlintech.com:8080/statics/boot/1.png)
-![image](http://chenlintech.com:8080/statics/boot/2.png)
-![image](http://chenlintech.com:8080/statics/boot/3.png)
-![image](http://chenlintech.com:8080/statics/boot/4.png)
-![image](http://chenlintech.com:8080/statics/boot/5.png)
+![image](http://oss.chenlintech.com/boot/1.png)
+![image](http://oss.chenlintech.com/boot/2.png)
+![image](http://oss.chenlintech.com/boot/3.png)
+![image](http://oss.chenlintech.com/boot/4.png)
+![image](http://oss.chenlintech.com/boot/5.png)
