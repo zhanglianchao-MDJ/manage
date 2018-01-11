@@ -1,4 +1,4 @@
-package net.chenlin.dp.orm.plugins;
+package net.chenlin.dp.common.support.orm.plugins;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.chenlin.dp.common.entity.Page;
-import net.chenlin.dp.orm.dialect.Dialect;
-import net.chenlin.dp.orm.dialect.DialectFactory;
+import net.chenlin.dp.common.support.orm.dialect.Dialect;
+import net.chenlin.dp.common.support.orm.dialect.DialectFactory;
 
 /**
  * PaginationStatementHandlerInterceptor

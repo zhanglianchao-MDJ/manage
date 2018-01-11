@@ -4,7 +4,7 @@
 <configuration>
 
     <properties>
-        <property name="dialectClass" value="net.chenlin.dp.orm.dialect.MySql5Dialect"/>
+        <property name="dialectClass" value="net.chenlin.dp.common.support.orm.dialect.MySql5Dialect"/>
     </properties>
 	
 	<!-- 配置mybatis的缓存，延迟加载等等一系列属性 -->
@@ -57,8 +57,8 @@
     </settings>
     
     <plugins>
-        <plugin interceptor="net.chenlin.dp.orm.plugins.PaginationResultSetHandlerInterceptor"/>
-        <plugin interceptor="net.chenlin.dp.orm.plugins.PaginationStatementHandlerInterceptor"/>
+        <plugin interceptor="net.chenlin.dp.common.support.orm.plugins.PaginationResultSetHandlerInterceptor"/>
+        <plugin interceptor="net.chenlin.dp.common.support.orm.plugins.PaginationStatementHandlerInterceptor"/>
     </plugins>
     
 </configuration>

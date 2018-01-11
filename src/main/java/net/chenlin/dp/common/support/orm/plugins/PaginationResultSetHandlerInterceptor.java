@@ -1,4 +1,4 @@
-package net.chenlin.dp.orm.plugins;
+package net.chenlin.dp.common.support.orm.plugins;
 
 import java.sql.Statement;
 import java.util.Properties;

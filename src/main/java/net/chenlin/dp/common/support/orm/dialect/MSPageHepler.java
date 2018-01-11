@@ -1,17 +1,17 @@
-package net.chenlin.dp.orm.dialect;
+package net.chenlin.dp.common.support.orm.dialect;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * MySql5PageHepler
+ * MSPageHepler
  *
  * @author ZhouChenglin
  * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 上午11:07:21
+ * @url: www.chenlintech.com
+ * @date 2017年8月8日 上午11:07:02
  */
-public class MySql5PageHepler {
+public class MSPageHepler {
     /**
      * 得到查询总数的sql
      */
@@ -57,11 +57,13 @@ public class MySql5PageHepler {
      * @return 分页SQL
      */
     public static String getLimitString(String querySelect, int offset, int limit) {
-
         querySelect = getLineSql(querySelect);
-
-        String sql = querySelect + " limit " + offset + " ," + limit;
-
+        int selectIndex = querySelect.toUpperCase().lastIndexOf("SELECT");
+        if (selectIndex > -1) {
+            querySelect = querySelect.substring(0, selectIndex) + "SELECT TOP " + (limit + offset) + querySelect.substring(selectIndex + 6);
+        }
+        String sql = "SELECT * FROM(SELECT ROW_NUMBER () OVER (ORDER BY getdate()) rownum,* FROM( " + querySelect + " ) A ) B WHERE B.rownum > " + offset + " AND B.rownum <= "
+                + (limit + offset);
         return sql;
 
     }

@@ -1,4 +1,4 @@
-package net.chenlin.dp.druid;
+package net.chenlin.dp.common.support.orm.db;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class DynamicDataSourceConfig {
 
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.default")
+    @ConfigurationProperties("spring.datasource.druid.masterDataSource")
     public DataSource defaultDataSource(){
         return DruidDataSourceBuilder.create().build();
     }
@@ -30,8 +30,8 @@ public class DynamicDataSourceConfig {
     @Bean
     @Primary
     public DynamicDataSource dataSource(DataSource defaultDataSource) {
-        Map<String, DataSource> targetDataSources = new HashMap<>();
-        targetDataSources.put(DataSourceContext.DEFAULT.getName(), defaultDataSource);
+        Map<String, DataSource> targetDataSources = new HashMap<>(2);
+        targetDataSources.put(DataSourceEnum.MASTER.getName(), defaultDataSource);
         return new DynamicDataSource(defaultDataSource, targetDataSources);
     }
 }

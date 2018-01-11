@@ -1,21 +1,22 @@
-package net.chenlin.dp.orm.dialect;
+package net.chenlin.dp.common.support.orm.dialect;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * PostgrePageHepler
+ * MySql5PageHepler
  *
  * @author ZhouChenglin
  * @email yczclcn@163.com
  * @url www.chenlintech.com
- * @date 2017年8月8日 上午11:07:46
+ * @date 2017年8月8日 上午11:07:21
  */
-public class PostgrePageHepler {
+public class MySql5PageHepler {
     /**
      * 得到查询总数的sql
      */
     public static String getCountString(String querySelect) {
+
         querySelect = getLineSql(querySelect);
         int orderIndex = getLastOrderInsertPoint(querySelect);
 
@@ -41,7 +42,7 @@ public class PostgrePageHepler {
             orderIndex = querySelect.length();
         }
         if (!isBracketCanPartnership(querySelect.substring(orderIndex, querySelect.length()))) {
-            throw new RuntimeException("Postgre 分页必须要有Order by 语句!");
+            throw new RuntimeException("My SQL 分页必须要有Order by 语句!");
         }
         return orderIndex;
     }
@@ -56,9 +57,13 @@ public class PostgrePageHepler {
      * @return 分页SQL
      */
     public static String getLimitString(String querySelect, int offset, int limit) {
+
         querySelect = getLineSql(querySelect);
-        String sql = querySelect + " LIMIT " + limit + " OFFSET " + offset;
+
+        String sql = querySelect + " limit " + offset + " ," + limit;
+
         return sql;
+
     }
 
     /**

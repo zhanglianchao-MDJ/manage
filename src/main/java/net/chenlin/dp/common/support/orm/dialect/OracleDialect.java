@@ -1,4 +1,4 @@
-package net.chenlin.dp.orm.dialect;
+package net.chenlin.dp.common.support.orm.dialect;
 
 /**
  * oracle方言

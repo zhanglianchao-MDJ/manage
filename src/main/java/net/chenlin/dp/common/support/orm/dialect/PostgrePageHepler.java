@@ -1,22 +1,21 @@
-package net.chenlin.dp.orm.dialect;
+package net.chenlin.dp.common.support.orm.dialect;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * MSPageHepler
+ * PostgrePageHepler
  *
  * @author ZhouChenglin
  * @email yczclcn@163.com
- * @url: www.chenlintech.com
- * @date 2017年8月8日 上午11:07:02
+ * @url www.chenlintech.com
+ * @date 2017年8月8日 上午11:07:46
  */
-public class MSPageHepler {
+public class PostgrePageHepler {
     /**
      * 得到查询总数的sql
      */
     public static String getCountString(String querySelect) {
-
         querySelect = getLineSql(querySelect);
         int orderIndex = getLastOrderInsertPoint(querySelect);
 
@@ -42,7 +41,7 @@ public class MSPageHepler {
             orderIndex = querySelect.length();
         }
         if (!isBracketCanPartnership(querySelect.substring(orderIndex, querySelect.length()))) {
-            throw new RuntimeException("My SQL 分页必须要有Order by 语句!");
+            throw new RuntimeException("Postgre 分页必须要有Order by 语句!");
         }
         return orderIndex;
     }
@@ -58,14 +57,8 @@ public class MSPageHepler {
      */
     public static String getLimitString(String querySelect, int offset, int limit) {
         querySelect = getLineSql(querySelect);
-        int selectIndex = querySelect.toUpperCase().lastIndexOf("SELECT");
-        if (selectIndex > -1) {
-            querySelect = querySelect.substring(0, selectIndex) + "SELECT TOP " + (limit + offset) + querySelect.substring(selectIndex + 6);
-        }
-        String sql = "SELECT * FROM(SELECT ROW_NUMBER () OVER (ORDER BY getdate()) rownum,* FROM( " + querySelect + " ) A ) B WHERE B.rownum > " + offset + " AND B.rownum <= "
-                + (limit + offset);
+        String sql = querySelect + " LIMIT " + limit + " OFFSET " + offset;
         return sql;
-
     }
 
     /**

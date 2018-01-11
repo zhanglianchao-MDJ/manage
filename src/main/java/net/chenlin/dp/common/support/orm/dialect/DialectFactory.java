@@ -1,4 +1,4 @@
-package net.chenlin.dp.orm.dialect;
+package net.chenlin.dp.common.support.orm.dialect;
 
 import org.apache.ibatis.session.Configuration;
 
