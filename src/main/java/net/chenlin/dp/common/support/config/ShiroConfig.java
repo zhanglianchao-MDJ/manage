@@ -1,4 +1,4 @@
-package net.chenlin.dp.config;
+package net.chenlin.dp.common.support.config;
 
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;

@@ -1,4 +1,4 @@
-package net.chenlin.dp.config;
+package net.chenlin.dp.common.support.config;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
