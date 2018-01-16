@@ -2,6 +2,7 @@ package net.chenlin.dp.modules.generator.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,6 +110,13 @@ public class TableEntity implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public void addColumn(ColumnEntity columnEntity) {
+		if (this.columns == null) {
+			columns = new ArrayList<>();
+		}
+		columns.add(columnEntity);
 	}
 	
 }
