@@ -36,6 +36,7 @@ public class PaginationResultSetHandlerInterceptor implements Interceptor {
     private static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
     private static final ReflectorFactory  DEFAULT_REFLECTOR_FACTORY = new DefaultReflectorFactory();
     
+    @Override
     public Object intercept(Invocation invocation) throws Throwable {
         DefaultResultSetHandler resultSetHandler = (DefaultResultSetHandler) invocation.getTarget();
         MetaObject metaStatementHandler = MetaObject.forObject(resultSetHandler, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY, DEFAULT_REFLECTOR_FACTORY);
@@ -49,10 +50,12 @@ public class PaginationResultSetHandlerInterceptor implements Interceptor {
         return result;
     }
 
+    @Override
     public Object plugin(Object target) {
         return Plugin.wrap(target, this);
     }
 
+    @Override
     public void setProperties(Properties properties) {
     }
 

@@ -46,6 +46,7 @@ public class PaginationStatementHandlerInterceptor implements Interceptor {
     private static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
     private static final ReflectorFactory  DEFAULT_REFLECTOR_FACTORY = new DefaultReflectorFactory();
 
+    @Override
     public Object intercept(Invocation invocation) throws Throwable {
         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
         ParameterHandler parameterHandler = statementHandler.getParameterHandler();
@@ -79,10 +80,12 @@ public class PaginationStatementHandlerInterceptor implements Interceptor {
         return invocation.proceed();
     }
 
+    @Override
     public Object plugin(Object target) {
         return Plugin.wrap(target, this);
     }
 
+    @Override
     public void setProperties(Properties properties) {
     }
 
@@ -96,11 +99,6 @@ public class PaginationStatementHandlerInterceptor implements Interceptor {
      * @throws Exception
      */
     private int getTotal(ParameterHandler parameterHandler, Connection connection, String countSql) throws Exception {
-        // MetaObject metaStatementHandler =
-        // MetaObject.forObject(parameterHandler);
-        // Object parameterObject =
-        // metaStatementHandler.getValue("parameterObject");
-        // TODO 缓存具有相同SQL语句和参数的总数
         PreparedStatement prepareStatement = connection.prepareStatement(countSql);
         parameterHandler.setParameters(prepareStatement);
         ResultSet rs = prepareStatement.executeQuery();

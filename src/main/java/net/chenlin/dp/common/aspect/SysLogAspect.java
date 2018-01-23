@@ -3,6 +3,7 @@ package net.chenlin.dp.common.aspect;
 import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 
+import net.chenlin.dp.common.utils.*;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,11 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.chenlin.dp.common.annotation.SysLog;
-import net.chenlin.dp.common.utils.CommonUtils;
-import net.chenlin.dp.common.utils.HttpContextUtils;
-import net.chenlin.dp.common.utils.IPUtils;
-import net.chenlin.dp.common.utils.JSONUtils;
-import net.chenlin.dp.common.utils.ShiroUtils;
 import net.chenlin.dp.modules.sys.entity.SysLogEntity;
 import net.chenlin.dp.modules.sys.entity.SysUserEntity;
 import net.chenlin.dp.modules.sys.manager.SysLogManager;
@@ -78,7 +74,7 @@ public class SysLogAspect {
 		//获取request
 		HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
 		//设置IP地址
-		sysLog.setIp(IPUtils.getIpAddr(request));
+		sysLog.setIp(IpUtils.getIpAddr(request));
 		//用户名
 		SysUserEntity currUser = ShiroUtils.getUserEntity();
 		if(CommonUtils.isNullOrEmpty(currUser)) {
