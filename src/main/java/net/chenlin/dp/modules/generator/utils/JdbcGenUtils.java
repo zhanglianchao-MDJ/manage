@@ -22,7 +22,7 @@ public class JdbcGenUtils {
     public static void main(String[] args) throws Exception {
 
         String jdbcDriver = "com.mysql.jdbc.Driver";
-        String jdbcUrl = "jdbc:mysql://192.168.180.130:3306/dp-lte-boot?useUnicode=true&characterEncoding=utf-8";
+        String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/dp-lte-boot?useUnicode=true&characterEncoding=utf-8";
         String jdbcUsername = "root";
         String jdbcPassword = "root";
 
@@ -42,6 +42,14 @@ public class JdbcGenUtils {
                                      String tablePrefix,
                                      String javaModule,
                                      String webModule) throws Exception {
+
+        String rootPath = "";
+        String osName = "os.name";
+        String osWindows = "win";
+        if(!System.getProperty(osName).toLowerCase().startsWith(osWindows)) {
+            rootPath = "/";
+        }
+
         String tableSql = "SELECT table_name, table_comment FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = (SELECT DATABASE()) AND table_name LIKE '" + tablePrefix + "_%';";
 
         JdbcUtils jdbcUtils = new JdbcUtils(jdbcDriver, jdbcUrl, jdbcUsername, jdbcPassword);
@@ -126,9 +134,10 @@ public class JdbcGenUtils {
             System.out.println("============ start table: " + tableEntity.getTableName() + " ================");
 
             for (String template : GenUtils.getTemplates()) {
-                String filePath = getFileName(template, javaModule, webModule, tableEntity.getClassName());
-                String templatePath = JdbcUtils.class.getResource("/"+template).getPath().replaceFirst("/", "");
-                File dstDir = new File(VelocityUtils.getPath(filePath));
+                String filePath = getFileName(template, javaModule, webModule, tableEntity.getClassName(), rootPath);
+                String templatePath = rootPath + JdbcUtils.class.getResource("/"+template).getPath().replaceFirst("/", "");
+                System.out.println(filePath);
+                File dstDir = new File(VelocityUtils.getPath(filePath));/*
                 //文件夹不存在创建文件夹
                 if(!dstDir.exists()){
                     dstDir.mkdirs();
@@ -140,16 +149,16 @@ public class JdbcGenUtils {
                     System.out.println(filePath + "===>>>创建成功！");
                 } else {
                     System.out.println(filePath + "===>>>文件已存在，未重新生成！");
-                }
+                }*/
             }
             System.out.println("============ finish table: " + tableEntity.getTableName() + " ================\n");
         }
     }
 
 
-    public static String getFileName(String template, String javaModule, String webModule, String className) {
-        String packagePath = getProjectPath() + "/src/main/java/" + PropertiesUtils.getInstance("velocity/generator").get("package").replace(".","/") + "/modules/" + javaModule + "/";
-        String resourcePath = getProjectPath() + "/src/main/resources/";
+    public static String getFileName(String template, String javaModule, String webModule, String className, String rootPath) {
+        String packagePath = rootPath + getProjectPath() + "/src/main/java/" + PropertiesUtils.getInstance("velocity/generator").get("package").replace(".","/") + "/modules/" + javaModule + "/";
+        String resourcePath = rootPath + getProjectPath() + "/src/main/resources/";
         String webPath = resourcePath + "templates/";
         if (template.contains(GenConstant.JAVA_ENTITY)) {
             return packagePath + "entity/" + className + "Entity.java";
