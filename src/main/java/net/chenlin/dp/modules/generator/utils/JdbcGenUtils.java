@@ -137,7 +137,7 @@ public class JdbcGenUtils {
                 String filePath = getFileName(template, javaModule, webModule, tableEntity.getClassName(), rootPath);
                 String templatePath = rootPath + JdbcUtils.class.getResource("/"+template).getPath().replaceFirst("/", "");
                 System.out.println(filePath);
-                File dstDir = new File(VelocityUtils.getPath(filePath));/*
+                File dstDir = new File(VelocityUtils.getPath(filePath));
                 //文件夹不存在创建文件夹
                 if(!dstDir.exists()){
                     dstDir.mkdirs();
@@ -149,7 +149,7 @@ public class JdbcGenUtils {
                     System.out.println(filePath + "===>>>创建成功！");
                 } else {
                     System.out.println(filePath + "===>>>文件已存在，未重新生成！");
-                }*/
+                }
             }
             System.out.println("============ finish table: " + tableEntity.getTableName() + " ================\n");
         }
