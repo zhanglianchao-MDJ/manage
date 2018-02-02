@@ -15,6 +15,9 @@
 - 支持通过velocity模板生成部分代码，可直接生成到项目路径，无须二次部署（见文档）
 - 基于角色的权限管理，支持操作权限和持数据权限
 - 基于Maven模块化开发，可快速扩展个性化业务模块
+### 项目拓展
+- [基于系统参数管理实现动态select控件](https://my.oschina.net/zhouchenglin/blog/1615653)
+- [基于ajaxfileupload.js实现文件上传](https://my.oschina.net/zhouchenglin/blog/1615214)
 ### 技术方案
 - 核心框架：SpringBoot
 - ORM框架：Mybatis
