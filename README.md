@@ -29,6 +29,7 @@
 - 树形表格：tree-grid(基于bootstrap扩展)
 - 树形插件：ztree
 - 弹窗组件：layer
+- 日期组件：laydate
 - 表单校验：validator
 
 ### 交流反馈
