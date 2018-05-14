@@ -2,7 +2,8 @@
 SQLyog Ultimate v11.27 (32 bit)
 MySQL - 5.5.48 : Database - dp-lte-boot
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -102,11 +103,11 @@ CREATE TABLE `sys_role_org` (
   `role_id` bigint(20) DEFAULT NULL COMMENT '角色ID',
   `org_id` bigint(20) DEFAULT NULL COMMENT '机构ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='角色与机构对应关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色与机构对应关系';
 
 /*Data for the table `sys_role_org` */
 
-insert  into `sys_role_org`(`id`,`role_id`,`org_id`) values (14,1,1),(15,1,2),(22,39,3);
+insert  into `sys_role_org`(`id`,`role_id`,`org_id`) values (null,1,1);
 
 /*Table structure for table `sys_user` */
 
@@ -140,11 +141,11 @@ CREATE TABLE `sys_user_role` (
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
   `role_id` bigint(20) DEFAULT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COMMENT='用户与角色对应关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户与角色对应关系';
 
 /*Data for the table `sys_user_role` */
 
-insert  into `sys_user_role`(`id`,`user_id`,`role_id`) values (46,1,1);
+insert  into `sys_user_role`(`id`,`user_id`,`role_id`) values (null,1,1);
 
 /*Table structure for table `sys_user_token` */
 
