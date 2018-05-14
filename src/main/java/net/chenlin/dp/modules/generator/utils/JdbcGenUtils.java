@@ -123,12 +123,11 @@ public class JdbcGenUtils {
             map.put("viewPath", webModule + "/" + tableEntity.getClassName().toLowerCase());
             map.put("authKey", GenUtils.urlToAuthKey(tableEntity.getTableName().replace("_","/")));
             map.put("columns", tableEntity.getColumns());
+            map.put("hasDecimal", tableEntity.buildHasDecimal().getHasDecimal());
             map.put("package", PropertiesUtils.getInstance("velocity/generator").get("package"));
             map.put("module", javaModule);
             map.put("author", PropertiesUtils.getInstance("velocity/generator").get("author"));
             map.put("email", PropertiesUtils.getInstance("velocity/generator").get("email"));
-            map.put("url", PropertiesUtils.getInstance("velocity/generator").get("url"));
-            map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_PATTERN_SLASH));
             VelocityContext context = new VelocityContext(map);
 
             System.out.println("============ start table: " + tableEntity.getTableName() + " ================");

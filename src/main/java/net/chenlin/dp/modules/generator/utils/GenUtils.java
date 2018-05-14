@@ -117,12 +117,11 @@ public class GenUtils {
 		map.put("viewPath", params.getViewPath());
 		map.put("authKey", urlToAuthKey(params.getRequestMapping()));
 		map.put("columns", table.getColumns());
+		map.put("hasDecimal", table.buildHasDecimal().getHasDecimal());
 		map.put("package", PropertiesUtils.getInstance("velocity/generator").get("package"));
 		map.put("module", params.getModule());
 		map.put("author", PropertiesUtils.getInstance("velocity/generator").get("author"));
 		map.put("email", PropertiesUtils.getInstance("velocity/generator").get("email"));
-		map.put("url", PropertiesUtils.getInstance("velocity/generator").get("url"));
-		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_CHN_PATTERN));
 		VelocityContext context = new VelocityContext(map);
 
 		// 获取模板列表

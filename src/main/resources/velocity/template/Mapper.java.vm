@@ -7,11 +7,7 @@ import net.chenlin.dp.modules.sys.dao.BaseMapper;
 
 /**
  * ${comments}
- *
- * @author ${author}
- * @email ${email}
- * @url ${url}
- * @date ${datetime}
+ * @author ${author}<${email}>
  */
 @Mapper
 public interface ${className}Mapper extends BaseMapper<${className}Entity> {
