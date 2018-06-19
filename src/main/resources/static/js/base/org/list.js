@@ -9,50 +9,65 @@ $(function () {
 
 function initialPage() {
 	$(window).resize(function() {
-		TreeGrid.table.resetHeight({height: $(window).height()-100});
+        $('#dataGrid').bootstrapTable('resetView', {
+            height : $(window).height() - 56
+        });
 	});
 }
 
 function getGrid() {
-	var colunms = TreeGrid.initColumn();
-    var table = new TreeTable(TreeGrid.id, '../../sys/org/list?_' + $.now(), colunms);
-    table.setExpandColumn(2);
-    table.setIdField("orgId");
-    table.setCodeField("orgId");
-    table.setParentCodeField("parentId");
-    table.setExpandAll(false);
-    table.setHeight($(window).height()-100);
-    table.init();
-    TreeGrid.table = table;
+    $('#dataGrid').bootstrapTreeTableEx({
+        url: '../../sys/org/list?_' + $.now(),
+        height: $(window).height() - 56,
+        idField: 'orgId',
+        treeShowField: 'name',
+        parentIdField: 'parentId',
+        columns: [
+            {field: 'selectItem', radio: true},
+            {title: '编号', field: 'orgId', visible: false, width: '80px'},
+            {title: '名称', field: 'name'},
+            {title: '机构编码', field: 'code', width: '200px'},
+            {title: '上级机构', field: 'parentName', width: '300px'},
+            {title: '可用', field: 'status', width: '60px', formatter: function(value, row, index){
+                    if(row.status === 0){
+                        return '<i class="fa fa-toggle-off"></i>';
+                    }
+                    if(row.status === 1){
+                        return '<i class="fa fa-toggle-on"></i>';
+                    }
+                }},
+            {title: '排序', field: 'orderNum', width: '80px'}
+        ]
+    });
 }
 
 var vm = new Vue({
 	el:'#dpLTE',
 	methods : {
 		load: function() {
-			TreeGrid.table.refresh();
+            $('#dataGrid').bootstrapTable('refresh');
 		},
 		save: function() {
 			dialogOpen({
 				title: '新增机构',
 				url: 'base/org/add.html?_' + $.now(),
 				width: '500px',
-				height: '315px',
+				height: '320px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
 				},
 			});
 		},
 		edit: function() {
-			var ck = TreeGrid.table.getSelectedRow();
+			var ck = $('#dataGrid').bootstrapTable('getSelections');
 			if(checkedRow(ck)){
 				dialogOpen({
 					title: '编辑机构',
 					url: 'base/org/edit.html?_' + $.now(),
 					width: '500px',
-					height: '315px',
+					height: '320px',
 					success: function(iframeId){
-						top.frames[iframeId].vm.org.orgId = ck[0].id;
+						top.frames[iframeId].vm.org.orgId = ck[0].orgId;
 						top.frames[iframeId].vm.setForm();
 					},
 					yes : function(iframeId) {
@@ -62,10 +77,10 @@ var vm = new Vue({
 			}
 		},
 		remove: function() {
-			var ck = TreeGrid.table.getSelectedRow(), ids = [];
+			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
 			if(checkedArray(ck)){
 				$.each(ck, function(idx, item){
-					ids[idx] = item.id;
+					ids[idx] = item.orgId;
 				});
 				$.RemoveForm({
 					url: '../../sys/org/remove?_' + $.now(),
@@ -78,31 +93,3 @@ var vm = new Vue({
 		}
 	}
 })
-
-var TreeGrid = {
-    id: "dataGrid",
-    table: null,
-    layerIndex: -1
-};
-
-/**
- * 初始化表格的列
- */
-TreeGrid.initColumn = function () {
-    var columns = [
-        {field: 'selectItem', radio: true},
-        {title: '编号', field: 'orgId', visible: false, align: 'center', valign: 'middle', width: '80px'},
-        {title: '名称', field: 'name', align: 'center', valign: 'middle'},
-        {title: '机构编码', field: 'code', align: 'center', valign: 'middle', width: '200px'},
-        {title: '上级机构', field: 'parentName', align: 'center', valign: 'middle', width: '300px'},
-        {title: '可用', field: 'status', align: 'center', valign: 'middle', width: '60px', formatter: function(item, index){
-        	if(item.status === 0){
-                return '<i class="fa fa-toggle-off"></i>';
-            }
-            if(item.status === 1){
-                return '<i class="fa fa-toggle-on"></i>';
-            }
-        }},
-        {title: '排序', field: 'orderNum', align: 'center', valign: 'middle', width: '80px'}]
-    return columns;
-};

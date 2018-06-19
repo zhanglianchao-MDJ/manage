@@ -70,6 +70,30 @@ $.fn.bootstrapTableEx = function(opt){
 	$(this).bootstrapTable(option);
 }
 
+$.fn.bootstrapTreeTableEx = function(opt) {
+    var $table = $(this);
+    var defaults = {
+        url: '',
+        striped: true,
+        sidePagination: 'server',
+        clickToSelect: true,
+        idField: '',
+        columns: [],
+        treeShowField: '',
+        parentIdField: '',
+        onLoadSuccess: function(data) {
+            $table.treegrid({
+                treeColumn: 1,
+                onChange: function() {
+                    $table.bootstrapTable('resetWidth');
+                }
+            });
+        }
+    }
+    var option = $.extend({}, defaults, opt);
+    $(this).bootstrapTable(option);
+}
+
 formatDate = function (v, format) {
     if (!v) return "";
     var d = v;
@@ -106,7 +130,11 @@ function today() {
 
 function countDay(dayCount) {
     var dd = new Date();
-    dd.setDate(dd.getDate()+dayCount);//获取AddDayCount天后的日期
+    if (dayCount < 0) {
+        dd.setDate(dd.getDate()+dayCount+1);//获取AddDayCount天前的日期
+    } else {
+        dd.setDate(dd.getDate()+dayCount-1);//获取AddDayCount天后的日期
+    }
     var y = dd.getFullYear();
     var m = (dd.getMonth()+1)<10?"0"+(dd.getMonth()+1):(dd.getMonth()+1);//获取当前月份的日期，不足10补0
     var d = dd.getDate()<10?"0"+dd.getDate():dd.getDate();//获取当前几号，不足10补0
