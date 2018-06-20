@@ -23,7 +23,7 @@ function getGrid() {
         treeShowField: 'name',
         parentIdField: 'parentId',
         columns: [
-            {field: 'selectItem', radio: true},
+            {checkbox: true},
             {title: '编号', field: 'orgId', visible: false, width: '80px'},
             {title: '名称', field: 'name'},
             {title: '机构编码', field: 'code', width: '200px'},
