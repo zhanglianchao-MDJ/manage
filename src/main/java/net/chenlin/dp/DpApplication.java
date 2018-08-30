@@ -3,8 +3,7 @@ package net.chenlin.dp;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * 应用启动器
@@ -14,19 +13,14 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @url www.chenlintech.com
  * @date 2017年9月3日 上午1:53:12
  */
+@Configuration
 @SpringBootApplication
-public class DpApplication extends SpringBootServletInitializer {
+public class DpApplication {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(DpApplication.class);
         application.setBannerMode(Banner.Mode.OFF);
         application.run(args);
-    }
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        application.bannerMode(Banner.Mode.OFF);
-        return application.sources(DpApplication.class);
     }
 
 }

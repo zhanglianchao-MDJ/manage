@@ -1,5 +1,6 @@
 package net.chenlin.dp.common.support.config;
 
+import net.chenlin.dp.common.constant.SystemConstant;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -70,6 +71,7 @@ public class ShiroConfig {
         filterMap.put("/fonts/**", "anon");
         filterMap.put("/plugins/**", "anon");
         filterMap.put("/swagger/**", "anon");
+        filterMap.put(SystemConstant.getResourceHandlerMapping(), "anon");
         filterMap.put("/favicon.ico", "anon");
         filterMap.put("/", "anon");
         filterMap.put("/**", "oauth2");

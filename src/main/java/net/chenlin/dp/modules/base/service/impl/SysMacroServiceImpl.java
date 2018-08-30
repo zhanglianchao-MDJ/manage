@@ -59,7 +59,7 @@ public class SysMacroServiceImpl implements SysMacroService {
 
 	@Override
 	public R updateMacro(SysMacroEntity macro) {
-		int count = sysMacroManager.updateMacro(validateMacro(macro));
+		int count = sysMacroManager.updateMacro(macro);
 		return CommonUtils.msg(count);
 	}
 
@@ -72,7 +72,12 @@ public class SysMacroServiceImpl implements SysMacroService {
 		int count = sysMacroManager.batchRemove(id);
 		return CommonUtils.msg(id, count);
 	}
-	
+
+	@Override
+	public List<SysMacroEntity> listMacroValue(String type) {
+		return sysMacroManager.listMacroValue(type);
+	}
+
 	/**
 	 * 当为参数类型时，状态为显示
 	 * @param macro

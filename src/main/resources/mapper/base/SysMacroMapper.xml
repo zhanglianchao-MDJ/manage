@@ -50,6 +50,26 @@
 		ORDER BY
 			order_num ASC
 	</select>
+
+	<select id="listMacroValue" resultType="net.chenlin.dp.modules.base.entity.SysMacroEntity">
+		SELECT
+			macro_id,
+			name,
+			value
+		FROM
+			sys_macro
+		WHERE
+			type_id = (
+				SELECT
+					macro_id
+				FROM
+					sys_macro
+				WHERE
+					value = #{value}
+			)
+		AND STATUS = 1
+		ORDER BY macro_id;
+	</select>
 	
 	<insert id="save">
 		INSERT INTO sys_macro (

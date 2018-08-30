@@ -51,12 +51,13 @@ $.fn.bootstrapTableEx = function(opt){
 		method: 'post',
 		dataType: 'json',
 		selectItemName: 'id',
-		clickToSelect: true,
+		clickToSelect: false,
 		pagination: true,
 		smartDisplay: false,
 		pageSize: 10,
 		pageList: [10, 20, 30, 40, 50],
         paginationLoop: false,
+        paginationShowPageGo: true,
 		sidePagination: 'server',
 		queryParamsType : null,
 		columns: []
@@ -421,4 +422,173 @@ $.currentIframe = function () {
 		return $(window.parent.document).contents().find('#main')[0].contentWindow;
     }
     return $(window.parent.document).contents().find('#'+tabiframeId())[0].contentWindow;//多层tab页嵌套
+}
+
+/**
+ * 根据ajax地址初始化select2选择器
+ * @param opt
+ * @returns {*}
+ */
+$.fn.selectBindEx = function(opt) {
+    var $select = $(this);
+    var defaults = {
+        url: '',
+        async: true,
+        text: 'name',
+        value: 'id',
+        placeholder: '请选择...',
+        selected: '',
+        allowClear: false,
+        theme: "bootstrap",
+        language: "zh-CN",
+        change: function(){}
+    }
+    if (opt.search === false) {
+        opt.minimumResultsForSearch = 'Infinity';
+    }
+    var option = $.extend({}, defaults, opt);
+    var selectControl = null;
+    $.ajax({
+        type: 'get',
+        async: option.async,
+        contentType : 'application/json',
+        url: option.url,
+        data: null,
+        success: function(r) {
+            selectControl = $select.select2(option);
+            $.each(r, function(idx, item){
+                selectControl.append("<option value='"+item[option.value]+"'>"+item[option.text]+"</option>");
+            })
+            $select.val(option.selected);
+            $select.on('change', function() {
+                option.change($select.val());
+            });
+        },
+        dataType: 'json'
+    });
+    return selectControl;
+}
+
+/**
+ * 初始化select2选择器
+ * @param placeholder
+ * @returns {*|void}
+ */
+$.fn.selectInitEx = function(placeholder, search) {
+    var opt = {
+        placeholder: placeholder,
+        theme: "bootstrap",
+        language: "zh-CN"
+    }
+    if (search === false) {
+        opt.minimumResultsForSearch = 'Infinity';
+    }
+    return $(this).select2(opt);
+}
+
+/**
+ * 富文本编辑器工具类
+ * @type {{init: editor.init}}
+ */
+editorUtils = {
+    init: function(opt) {
+        var defaults = {
+            element: '#editor',
+            change: function(){}
+        };
+        var option = $.extend({}, defaults, opt);
+        var editor = new window.wangEditor(option.element);
+        editor.customConfig.uploadImgServer = '/editor/upload';
+        editor.customConfig.uploadImgHeaders = {
+            'token': token
+        }
+        editor.customConfig.onchange= function(html) {
+            option.change(html);
+        };
+        editor.customConfig.customAlert = function(info) {
+            dialogAlert(info, 'error');
+        };
+        editor.create();
+        return editor;
+    },
+    set: function($editor, content) {
+        $editor.txt.html(content);
+    },
+    get: function($editor) {
+        return $editor.txt.html();
+    },
+    text: function($editor) {
+        return $editor.txt.text();
+    },
+    append: function($editor, content) {
+        $editor.txt.append(content)
+    },
+    clear: function($editor) {
+        $editor.txt.clear()
+    },
+    hasContents: function ($editor) {
+        var content = this.get($editor);
+        return isNotNullOrEmpty(this.get($editor)) && "<p><br></p>" !== content;
+    }
+}
+
+/**
+ * switchery开关组件
+ * @type {{}}
+ * 选择器selector用于获取选择状态，开关instance用于设置状态，禁用，启用
+ */
+switchUtils = {
+    init: function(opt) {
+        var defaults = {
+            selector: '#editor',
+            size: 'small',
+            single: true,
+            change: function(){}
+        };
+        var option = $.extend({}, defaults, opt);
+        var switchContainer = [], switchResults = [];
+        if (option.single) {
+            switchContainer.push(document.querySelector(option.selector));
+        } else {
+            switchContainer = document.querySelectorAll(option.selector);
+        }
+        $.each(switchContainer, function(idx, item) {
+            var $switchery = new Switchery(item, option);
+            var $item = $(item);
+            var result = {selector: item, instance: $switchery};
+            $item.on('change', function(event) {
+                option.change(result);
+            });
+            switchResults.push(result);
+        });
+        if (option.single) {
+            return switchResults[0];
+        }
+        return switchResults;
+    },
+    set: function($switch, checked) {
+        $switch = $switch.instance;
+        if ((checked && !$switch.isChecked()) || (!checked && $switch.isChecked())) {
+            $switch.setPosition(true);
+            $switch.handleOnchange(true);
+        }
+    },
+    on: function($switch) {
+        this.set($switch, true);
+    },
+    off: function($switch) {
+        this.set($switch, false);
+    },
+    disable: function($switch) {
+        $switch.instance.disable();
+    },
+    enable: function($switch) {
+        $switch.instance.enable();
+    },
+    checked: function($switch) {
+        return $switch.selector.checked;
+    },
+    data: function($switch, key) {
+        return $($switch.selector).data(key);
+    }
 }

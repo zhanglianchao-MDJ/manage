@@ -19,11 +19,37 @@ public class SystemConstant {
 	 * 数据标识
 	 */
 	public static final String DATA_ROWS = "rows";
-	
+
 	/**
-	 * 未授权错误代码
+	 * 文件上传协议
 	 */
-	public static final int UNAUTHORIZATION_CODE = 401;
+	private static final String UPLOAD_LOCATION_PROTOCOL = "file:";
+
+	/**
+	 * 文件上传物理路径
+	 */
+	public static String UPLOAD_LOCATION_PATH;
+
+	/**
+	 * 文件上传目录访问路径
+	 */
+	public static final String UPLOAD_LOCATION_MAPPING = "/upload/";
+
+	/**
+	 * 访问映射
+	 * @return
+	 */
+	public static String getResourceHandlerMapping() {
+		return SystemConstant.UPLOAD_LOCATION_MAPPING.concat("**");
+	}
+
+	/**
+	 * 物理地址
+	 * @return
+	 */
+	public static String getResourceLocation() {
+		return SystemConstant.UPLOAD_LOCATION_PROTOCOL.concat(SystemConstant.UPLOAD_LOCATION_PATH);
+	}
 	
 	/**
 	 * 菜单类型

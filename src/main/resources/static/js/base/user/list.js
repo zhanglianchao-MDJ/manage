@@ -49,13 +49,13 @@ function getGrid() {
 			field : "status",
 			title : "状态",
 			width : "60px",
-			formatter : function(value, row, index) {
-				if (value == '0') {
-					return '<span class="label label-danger">禁用</span>';
-				} else if (value == '1') {
-					return '<span class="label label-success">正常</span>';
-				}
-			}
+            formatter : function(value , row, index) {
+                if(value === 0){
+                    return '<input type="checkbox" class="js-switch" data-id="'+row.userId+'">';
+                }else if(value === 1){
+                    return '<input type="checkbox" class="js-switch" data-id="'+row.userId+'" checked>';
+                }
+            }
 		}, {
 			field : "gmtCreate",
 			title : "创建时间",
@@ -63,7 +63,28 @@ function getGrid() {
 		}, {
 			field : "remark",
 			title : "备注"
-		} ]
+		} ],
+        onPostBody: function() {
+            switchUtils.init({
+                selector: '.js-switch',
+                single: false,
+                change: function(switchContainer) {
+                    var ids = [switchUtils.data(switchContainer, "id")];
+                    var url = '../../sys/user/disable?_' + $.now();
+                    if (switchUtils.checked(switchContainer)) {
+                        url = '../../sys/user/enable?_' + $.now();
+                    }
+                    $.AjaxForm({
+                        url: url,
+                        param: ids,
+                        success: function(data) {
+                            vm.load();
+                        }
+                    });
+
+                }
+            });
+        }
 	})
 }
 
@@ -80,8 +101,8 @@ var vm = new Vue({
 			dialogOpen({
 				title : '新增用户',
 				url : 'base/user/add.html?_' + $.now(),
-                width : '620px',
-                height : '524px',
+                width : '500px',
+                height : '456px',
 				scroll : true,
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
@@ -94,8 +115,8 @@ var vm = new Vue({
 				dialogOpen({
 					title : '编辑用户',
 					url : 'base/user/edit.html?_' + $.now(),
-                    width : '620px',
-                    height : '524px',
+                    width : '500px',
+                    height : '456px',
 					scroll : true,
 					success : function(iframeId) {
 						top.frames[iframeId].vm.user.userId = ck[0].userId;

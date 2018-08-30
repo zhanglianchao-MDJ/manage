@@ -21,6 +21,7 @@ spring:
             max-file-size: 100MB
             max-request-size: 100MB
             enabled: true
+            location: /Users/zhouchenglin/dev/dp-boot/
     # thymeleaf 模板引擎
     thymeleaf:
         cache: false
