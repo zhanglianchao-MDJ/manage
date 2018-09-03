@@ -4,7 +4,6 @@
 ### 传送门
 - dp-LTE：[http://git.oschina.net/zhocuhenglin/dp-security/](http://git.oschina.net/zhocuhenglin/dp-security/)
 - dp-PRO：[http://git.oschina.net/zhocuhenglin/dp-pro](http://git.oschina.net/zhocuhenglin/dp-pro)
-- dp-ADMIN：dp-pro未拆分版本，采用全新交互逻辑及代码优化，简化项目分层，更快整合前中台服务；项目见dp-pro的dp分支
 - dp-GEN：[http://git.oschina.net/zhocuhenglin/dp-generator](http://git.oschina.net/zhocuhenglin/dp-generator)
 - dp-BOOT：[https://gitee.com/zhocuhenglin/dp-boot](https://gitee.com/zhocuhenglin/dp-BOOT)
 - 项目文档：[http://dp-dev.mydoc.io/](http://dp-dev.mydoc.io/)
@@ -16,6 +15,7 @@
 - 支持通过velocity模板生成部分代码，可直接生成到项目路径，无须二次部署（见文档）
 - 基于角色的权限管理，支持操作权限和持数据权限
 - 基于Maven模块化开发，可快速扩展个性化业务模块
+- 封装常用开发组件，目前已集成select2、switchery及富文本组件
 ### 项目拓展
 - [基于系统参数管理实现动态select控件](https://my.oschina.net/zhouchenglin/blog/1615653)
 - [基于ajaxfileupload.js实现文件上传](https://my.oschina.net/zhouchenglin/blog/1615214)
@@ -26,11 +26,14 @@
 - 模板框架：thymeleaf
 - 主页框架：adminLTE(Bootstrap)
 - JS框架：vue.js
-- 表格插件：bootstrap-table
+- 表格插件：bootstrap-table(扩展分页跳转)
 - 树形表格：tree-grid(基于bootstrap扩展)
 - 树形插件：ztree
 - 弹窗组件：layer
 - 日期组件：laydate
+- 下拉选择组件：select2
+- 开关组件：switchery
+- 富文本组件：wangEditor
 - 表单校验：validator
 
 ### 交流反馈
@@ -51,7 +54,7 @@
 ![image](http://oss.chenlintech.com/common/0.png)
 
 ### 项目演示
-- 演示地址：[http://dp.chenlintech.com](http://dp.chenlintech.com)
+- 演示地址：[http://dp.chenlintech.com](http://119.29.189.175:8080/dp/login.html)
 - 账号密码：admin / 1
 
 ### 运行效果
