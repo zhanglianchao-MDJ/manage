@@ -7,11 +7,7 @@ import net.chenlin.dp.common.entity.Query;
 
 /**
  * 基础dao
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月12日 下午12:23:18
+ * @author zcl<yczclcn@163.com>
  */
 public interface BaseMapper<T> {
 	

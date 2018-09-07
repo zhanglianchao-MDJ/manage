@@ -23,11 +23,7 @@ import net.chenlin.dp.common.entity.Page;
 
 /**
  * PaginationResultSetHandlerInterceptor
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月11日 上午11:33:03
+ * @author zcl<yczclcn@163.com>
  */
 @Intercepts({ @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = { Statement.class }) })
 public class PaginationResultSetHandlerInterceptor implements Interceptor {

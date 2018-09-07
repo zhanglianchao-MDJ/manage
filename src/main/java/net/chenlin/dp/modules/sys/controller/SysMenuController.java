@@ -17,11 +17,7 @@ import net.chenlin.dp.modules.sys.service.SysMenuService;
 
 /**
  * 系统菜单controller
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月10日 上午12:23:44
+ * @author zcl<yczclcn@163.com>
  */
 @RestController
 @RequestMapping("/sys/menu")

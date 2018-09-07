@@ -6,17 +6,23 @@ import net.chenlin.dp.modules.sys.entity.SysUserTokenEntity;
 
 /**
  * 用户token
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年9月3日 上午3:29:17
+ * @author zcl<yczclcn@163.com>
  */
 @Mapper
 public interface SysUserTokenMapper extends BaseMapper<SysUserTokenEntity> {
 
+	/**
+	 * 根据token查询
+	 * @param token
+	 * @return
+	 */
 	SysUserTokenEntity getByToken(String token);
-	
+
+	/**
+	 * 根据用户id查询
+	 * @param userId
+	 * @return
+	 */
 	SysUserTokenEntity getByUserId(Long userId);
 	
 }

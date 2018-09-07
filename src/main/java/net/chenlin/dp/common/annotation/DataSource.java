@@ -4,8 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * 数据源注解
- * @author ZhouChenglin
- * @date 2018/2/7
+ * @author zcl<yczclcn@163.com>
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

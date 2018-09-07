@@ -2,11 +2,7 @@ package net.chenlin.dp.common.constant;
 
 /**
  * 系统提示静态变量
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月12日 下午1:33:18
+ * @author zcl<yczclcn@163.com>
  */
 public class MsgConstant {
 

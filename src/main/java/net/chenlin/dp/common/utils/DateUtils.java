@@ -5,11 +5,7 @@ import java.util.Date;
 
 /**
  * 日期处理
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 下午12:02:46
+ * @author zcl<yczclcn@163.com>
  */
 public class DateUtils {
 	

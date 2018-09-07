@@ -6,11 +6,7 @@ import org.apache.ibatis.session.RowBounds;
 
 /**
  * Mybatis分页参数及查询结果封装. 注意所有序号从1开始
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 上午11:41:07
+ * @author zcl<yczclcn@163.com>
  */
 public class Page<T> extends RowBounds {
     

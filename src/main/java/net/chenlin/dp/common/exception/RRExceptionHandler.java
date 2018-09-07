@@ -1,5 +1,6 @@
 package net.chenlin.dp.common.exception;
 
+import net.chenlin.dp.common.entity.R;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
@@ -8,15 +9,9 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import net.chenlin.dp.common.entity.R;
-
 /**
  * 异常处理器
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 上午11:59:44
+ * @author zcl<yczclcn@163.com>
  */
 @RestControllerAdvice
 public class RRExceptionHandler {
@@ -31,22 +26,36 @@ public class RRExceptionHandler {
 		R r = new R();
 		r.put("code", e.getCode());
 		r.put("msg", e.getMessage());
-
 		return r;
 	}
 
+	/**
+	 * 新增异常
+	 * @param e
+	 * @return
+	 */
 	@ExceptionHandler(DuplicateKeyException.class)
 	public R handleDuplicateKeyException(DuplicateKeyException e){
 		logger.error(e.getMessage(), e);
 		return R.error("数据库中已存在该记录");
 	}
 
+	/**
+	 * 无权限异常
+	 * @param e
+	 * @return
+	 */
 	@ExceptionHandler({UnauthorizedException.class, AuthorizationException.class})
 	public R handleAuthorizationException(AuthorizationException e){
 		logger.error(e.getMessage(), e);
 		return R.error("没有权限，请联系管理员授权");
 	}
 
+	/**
+	 * 通用异常
+	 * @param e
+	 * @return
+	 */
 	@ExceptionHandler(Exception.class)
 	public R handleException(Exception e){
 		logger.error(e.getMessage(), e);

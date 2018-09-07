@@ -15,11 +15,7 @@ import net.chenlin.dp.modules.sys.service.SysLogService;
 
 /**
  * 系统日志
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月14日 下午10:01:36
+ * @author zcl<yczclcn@163.com>
  */
 @RestController
 @RequestMapping("/sys/log")

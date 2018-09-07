@@ -1,6 +1,6 @@
 package net.chenlin.dp.common.utils;
 
-import net.chenlin.dp.common.constant.SystemConstant;
+import net.chenlin.dp.common.support.properties.GlobalProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,12 +16,13 @@ import java.util.UUID;
 
 /**
  * 文件上传工具类
- * @author ZhouChenglin
- * @date 2018/1/29
+ * @author zcl<yczclcn@163.com>
  */
 public class UploadUtils {
 
     private static Logger LOG = LoggerFactory.getLogger(UploadUtils.class);
+
+    private static GlobalProperties globalProperties = SpringContextUtils.getBean("globalProperties", GlobalProperties.class);
 
     /** 上传文件处理(支持批量) */
     public static List<String> uploadFile(HttpServletRequest request) {
@@ -30,7 +31,7 @@ public class UploadUtils {
         List<String> fileNames = new ArrayList<>();
         if (multipartResolver.isMultipart(request)) {
             MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-            File dirFile = new File(SystemConstant.UPLOAD_LOCATION_PATH);
+            File dirFile = new File(globalProperties.getUploadLocation());
             if (!dirFile.isDirectory()) {
                 dirFile.mkdirs();
             }
@@ -42,12 +43,12 @@ public class UploadUtils {
                     String uuid = UUID.randomUUID().toString();
                     String postFix = name.substring(name.lastIndexOf(".")).toLowerCase();
                     String fileName = uuid + postFix;
-                    String filePath = SystemConstant.UPLOAD_LOCATION_PATH + fileName;
+                    String filePath = globalProperties.getUploadLocation() + fileName;
                     File file = new File(filePath);
                     file.setWritable(true, false);
                     try {
                         multipartFile.transferTo(file);
-                        fileNames.add(SystemConstant.UPLOAD_LOCATION_MAPPING.concat(fileName));
+                        fileNames.add(globalProperties.getUploadMapping().concat(fileName));
                     } catch (Exception e) {
                         LOG.error(name + "保存失败", e);
                     }
@@ -64,7 +65,7 @@ public class UploadUtils {
         List<String> fileNames = new ArrayList<>();
         if (multipartResolver.isMultipart(request)) {
             MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-            File dirFile = new File(SystemConstant.UPLOAD_LOCATION_PATH.concat(path));
+            File dirFile = new File(globalProperties.getUploadLocation().concat(path));
             if (!dirFile.isDirectory()) {
                 dirFile.mkdirs();
             }
@@ -76,12 +77,12 @@ public class UploadUtils {
                     String uuid = UUID.randomUUID().toString();
                     String postFix = name.substring(name.lastIndexOf(".")).toLowerCase();
                     String fileName = uuid + postFix;
-                    String filePath = SystemConstant.UPLOAD_LOCATION_PATH + path + fileName;
+                    String filePath = globalProperties.getUploadLocation() + path + fileName;
                     File file = new File(filePath);
                     file.setWritable(true, false);
                     try {
                         multipartFile.transferTo(file);
-                        fileNames.add(SystemConstant.UPLOAD_LOCATION_MAPPING + path + fileName);
+                        fileNames.add(globalProperties.getUploadMapping() + path + fileName);
                     } catch (Exception e) {
                         LOG.error(name + "保存失败", e);
                     }

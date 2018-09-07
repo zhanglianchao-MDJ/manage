@@ -8,11 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 系统日志注解
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月14日 下午8:00:45
+ * @author zcl<yczclcn@163.com>
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

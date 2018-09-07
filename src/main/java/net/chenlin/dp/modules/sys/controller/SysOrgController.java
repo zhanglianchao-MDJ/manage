@@ -14,11 +14,7 @@ import net.chenlin.dp.modules.sys.service.SysOrgService;
 
 /**
  * 组织机构
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月17日 上午11:35:00
+ * @author zcl<yczclcn@163.com>
  */
 @RestController
 @RequestMapping("/sys/org")

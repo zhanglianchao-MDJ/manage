@@ -31,11 +31,7 @@ import net.chenlin.dp.common.support.orm.dialect.DialectFactory;
 
 /**
  * PaginationStatementHandlerInterceptor
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月11日 上午11:33:26
+ * @author zcl<yczclcn@163.com>
  */
 @Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class, Integer.class }) })
 public class PaginationStatementHandlerInterceptor implements Interceptor {

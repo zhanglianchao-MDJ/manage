@@ -1,0 +1,48 @@
+package ${package}.modules.${module}.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+<% if(has(hasDecimal) && hasDecimal == true) { %>
+import java.math.BigDecimal;
+<% } %>
+
+
+/**
+ * ${comments}
+ * @author ${author}<${email}>
+ */
+public class ${className}Entity implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
+<% for (column in columns!) { %>
+	/**
+	 * ${column.columnComment}
+	 */
+	private ${column.fieldType} ${column.fieldName};
+	
+<% } %>
+
+	public ${className}Entity() {
+		super();
+	}
+
+<% for (column in columns) { %>
+    /**
+     * setter for ${column.fieldName}
+     * @param ${column.fieldName}
+     */
+	public void set${column.methodName}(${column.fieldType} ${column.fieldName}) {
+		this.${column.fieldName} = ${column.fieldName};
+	}
+
+    /**
+     * getter for ${column.fieldName}
+     */
+	public ${column.fieldType} get${column.methodName}() {
+		return ${column.fieldName};
+	}
+	
+<% } %>
+}

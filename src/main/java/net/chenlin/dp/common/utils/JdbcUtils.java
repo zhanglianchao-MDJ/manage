@@ -8,8 +8,7 @@ import java.util.Map;
 
 /**
  * JDBC工具类
- * @author ZhouChenglin
- * @date 2018/1/7
+ * @author zcl<yczclcn@163.com>
  */
 public class JdbcUtils {
 

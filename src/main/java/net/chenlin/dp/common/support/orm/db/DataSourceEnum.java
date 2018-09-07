@@ -2,14 +2,13 @@ package net.chenlin.dp.common.support.orm.db;
 
 /**
  * 数据源上下文
- * @author ZhouChenglin
- * @date 2017/12/25
+ * @author zcl<yczclcn@163.com>
  */
 public enum DataSourceEnum {
 
-    MASTER("masterDataSource", true),
+    MASTER("master-data-source", true),
 
-    SLAVE("slaveDataSource", false);
+    SLAVE("slave-data-source", false);
 
     private String name;
 

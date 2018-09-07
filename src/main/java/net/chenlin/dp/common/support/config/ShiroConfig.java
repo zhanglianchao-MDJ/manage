@@ -1,6 +1,7 @@
 package net.chenlin.dp.common.support.config;
 
-import net.chenlin.dp.common.constant.SystemConstant;
+import net.chenlin.dp.modules.sys.shiro.UserFilter;
+import net.chenlin.dp.modules.sys.shiro.UserRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -12,79 +13,97 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import net.chenlin.dp.modules.sys.oauth2.OAuth2Filter;
-import net.chenlin.dp.modules.sys.oauth2.OAuth2Realm;
-
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Shiro配置
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年9月3日 下午4:08:42
+ * shiro配置
+ * @author zcl<yczclcn@163.com>
  */
 @Configuration
 public class ShiroConfig {
 
-    @Bean("sessionManager")
-    public SessionManager sessionManager(){
-        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        sessionManager.setSessionValidationSchedulerEnabled(true);
-        sessionManager.setSessionIdCookieEnabled(false);
-        return sessionManager;
-    }
-
-    @Bean("securityManager")
-    public SecurityManager securityManager(OAuth2Realm oAuth2Realm, SessionManager sessionManager) {
+    /**
+     * 安全管理器
+     * @param sessionManager
+     * @return
+     */
+    @Bean
+    public SecurityManager securityManager(SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(oAuth2Realm);
         securityManager.setSessionManager(sessionManager);
-
+        securityManager.setRealm(this.userRealm());
         return securityManager;
     }
 
-    @Bean("shiroFilter")
-    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
+    /**
+     * session管理器
+     * @return
+     */
+    @Bean
+    public SessionManager sessionManager(){
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setSessionValidationSchedulerEnabled(true);
+        sessionManager.setSessionIdUrlRewritingEnabled(false);
+        sessionManager.setDeleteInvalidSessions(true);
+        return sessionManager;
+    }
+
+    /**
+     * 用户realm
+     * @return
+     */
+    @Bean
+    public UserRealm userRealm(){
+        return new UserRealm();
+    }
+
+    /**
+     * shiro过滤器
+     * @param securityManager
+     * @return
+     */
+    @Bean
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
         shiroFilter.setSecurityManager(securityManager);
 
-        //oauth过滤
+        shiroFilter.setLoginUrl("/login");
+
+        shiroFilter.setSuccessUrl("/");
+
+        shiroFilter.setUnauthorizedUrl("/error/403");
+
+        //user过滤器，处理ajax请求超时不跳转情况
         Map<String, Filter> filters = new HashMap<>();
-        filters.put("oauth2", new OAuth2Filter());
+        filters.put("user", new UserFilter());
         shiroFilter.setFilters(filters);
 
         Map<String, String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/webjars/**", "anon");
-        filterMap.put("/druid/**", "anon");
-        filterMap.put("/api/**", "anon");
-        filterMap.put("/sys/login", "anon");
-        filterMap.put("/sys/captcha.jpg", "anon");
-        filterMap.put("/**/*.css", "anon");
-        filterMap.put("/**/*.js", "anon");
-        filterMap.put("/**/*.html", "anon");
-        filterMap.put("/images/**", "anon");
-        filterMap.put("/fonts/**", "anon");
-        filterMap.put("/plugins/**", "anon");
-        filterMap.put("/swagger/**", "anon");
-        filterMap.put(SystemConstant.getResourceHandlerMapping(), "anon");
-        filterMap.put("/favicon.ico", "anon");
-        filterMap.put("/", "anon");
-        filterMap.put("/**", "oauth2");
+        filterMap.put("/static/**", "anon");
+        filterMap.put("/error/**", "anon");
+        filterMap.put("/login", "anon");
+        filterMap.put("/**", "user");
         shiroFilter.setFilterChainDefinitionMap(filterMap);
 
         return shiroFilter;
     }
 
-    @Bean("lifecycleBeanPostProcessor")
+    /**
+     * shiro生命周期处理器
+     * @return
+     */
+    @Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
 
+    /**
+     * 使用cglib方式创建代理对象
+     * @return
+     */
     @Bean
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
@@ -92,6 +111,11 @@ public class ShiroConfig {
         return proxyCreator;
     }
 
+    /**
+     * 启用注解
+     * @param securityManager
+     * @return
+     */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();

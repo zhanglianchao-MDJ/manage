@@ -2,11 +2,7 @@ package net.chenlin.dp.common.constant;
 
 /**
  * 系统级静态变量
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 下午1:35:38
+ * @author zcl<yczclcn@163.com>
  */
 public class SystemConstant {
 	
@@ -19,37 +15,6 @@ public class SystemConstant {
 	 * 数据标识
 	 */
 	public static final String DATA_ROWS = "rows";
-
-	/**
-	 * 文件上传协议
-	 */
-	private static final String UPLOAD_LOCATION_PROTOCOL = "file:";
-
-	/**
-	 * 文件上传物理路径
-	 */
-	public static String UPLOAD_LOCATION_PATH;
-
-	/**
-	 * 文件上传目录访问路径
-	 */
-	public static final String UPLOAD_LOCATION_MAPPING = "/upload/";
-
-	/**
-	 * 访问映射
-	 * @return
-	 */
-	public static String getResourceHandlerMapping() {
-		return SystemConstant.UPLOAD_LOCATION_MAPPING.concat("**");
-	}
-
-	/**
-	 * 物理地址
-	 * @return
-	 */
-	public static String getResourceLocation() {
-		return SystemConstant.UPLOAD_LOCATION_PROTOCOL.concat(SystemConstant.UPLOAD_LOCATION_PATH);
-	}
 	
 	/**
 	 * 菜单类型

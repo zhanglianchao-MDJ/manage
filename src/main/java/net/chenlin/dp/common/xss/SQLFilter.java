@@ -6,11 +6,7 @@ import net.chenlin.dp.common.exception.RRException;
 
 /**
  * SQL过滤
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 下午12:00:08
+ * @author zcl<yczclcn@163.com>
  */
 public class SQLFilter {
 

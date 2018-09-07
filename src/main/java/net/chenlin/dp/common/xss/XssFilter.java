@@ -6,11 +6,7 @@ import java.io.IOException;
 
 /**
  * XSS过滤
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 下午12:00:23
+ * @author zcl<yczclcn@163.com>
  */
 public class XssFilter implements Filter {
 

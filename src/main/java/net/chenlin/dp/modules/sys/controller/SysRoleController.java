@@ -17,11 +17,7 @@ import net.chenlin.dp.modules.sys.service.SysRoleService;
 
 /**
  * 系统角色
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月12日 上午12:43:10
+ * @author zcl<yczclcn@163.com>
  */
 @RestController
 @RequestMapping("/sys/role")

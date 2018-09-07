@@ -2,6 +2,7 @@ package net.chenlin.dp.modules.sys.controller;
 
 import java.util.Map;
 
+import net.chenlin.dp.common.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +17,7 @@ import net.chenlin.dp.modules.sys.service.SysUserService;
 
 /**
  * 系统用户
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 下午9:04:59
+ * @author zcl<yczclcn@163.com>
  */
 @RestController
 @RequestMapping("/sys/user")
@@ -56,7 +53,7 @@ public class SysUserController extends AbstractController {
 	 */
 	@RequestMapping("/perms")
 	public R listUserPerms() {
-		return sysUserService.listUserPerms(getUserId());
+		return CommonUtils.msgNotCheckNull(sysUserService.listUserPerms(getUserId()));
 	}
 	
 	/**

@@ -1,9 +1,13 @@
 package net.chenlin.dp.common.aspect;
 
-import java.lang.reflect.Method;
-import javax.servlet.http.HttpServletRequest;
-
-import net.chenlin.dp.common.utils.*;
+import net.chenlin.dp.common.annotation.SysLog;
+import net.chenlin.dp.common.utils.CommonUtils;
+import net.chenlin.dp.common.utils.JSONUtils;
+import net.chenlin.dp.common.utils.ShiroUtils;
+import net.chenlin.dp.common.utils.WebUtils;
+import net.chenlin.dp.modules.sys.dao.SysLogMapper;
+import net.chenlin.dp.modules.sys.entity.SysLogEntity;
+import net.chenlin.dp.modules.sys.entity.SysUserEntity;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,26 +16,19 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import net.chenlin.dp.common.annotation.SysLog;
-import net.chenlin.dp.modules.sys.entity.SysLogEntity;
-import net.chenlin.dp.modules.sys.entity.SysUserEntity;
-import net.chenlin.dp.modules.sys.manager.SysLogManager;
+import java.lang.reflect.Method;
 
 
 /**
  * 系统日志，切面处理类
- * 
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月28日 上午11:07:35
+ * @author zcl<yczclcn@163.com>
  */
 @Aspect
 @Component
 public class SysLogAspect {
 	
 	@Autowired
-	private SysLogManager sysLogManager;
+	private SysLogMapper sysLogMapper;
 	
 	@Pointcut("@annotation(net.chenlin.dp.common.annotation.SysLog)")
 	public void logPointCut() { 
@@ -71,10 +68,8 @@ public class SysLogAspect {
 		}catch (Exception e){
 
 		}
-		//获取request
-		HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
 		//设置IP地址
-		sysLog.setIp(IpUtils.getIpAddr(request));
+		sysLog.setIp(WebUtils.getIpAddr());
 		//用户名
 		SysUserEntity currUser = ShiroUtils.getUserEntity();
 		if(CommonUtils.isNullOrEmpty(currUser)) {
@@ -91,7 +86,7 @@ public class SysLogAspect {
 		}
 		sysLog.setTime(time);
 		//保存系统日志
-		sysLogManager.saveLog(sysLog);
+		sysLogMapper.save(sysLog);
 	}
 	
 }

@@ -15,11 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * json工具类(jackjson)
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年9月3日 上午2:37:04
+ * @author zcl<yczclcn@163.com>
  */
 public class JSONUtils {
 

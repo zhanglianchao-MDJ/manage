@@ -5,11 +5,7 @@ import org.apache.shiro.util.ByteSource;
 
 /**
  * MD5加密工具
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 下午5:17:34
+ * @author zcl<yczclcn@163.com>
  */
 public class MD5Utils {
 

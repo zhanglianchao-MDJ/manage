@@ -12,17 +12,13 @@ import java.util.Map;
 
 /**
  * 配置多数据源
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年9月3日 下午8:03:40
+ * @author zcl<yczclcn@163.com>
  */
 @Configuration
 public class DynamicDataSourceConfig {
 
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.masterDataSource")
+    @ConfigurationProperties("spring.datasource.druid.master-data-source")
     public DataSource defaultDataSource(){
         return DruidDataSourceBuilder.create().build();
     }

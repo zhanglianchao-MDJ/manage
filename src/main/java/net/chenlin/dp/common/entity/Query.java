@@ -6,11 +6,7 @@ import java.util.Map;
 
 /**
  * 查询条件
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月11日 下午12:13:58
+ * @author zcl<yczclcn@163.com>
  */
 public class Query extends HashMap<String, Object> {
 	

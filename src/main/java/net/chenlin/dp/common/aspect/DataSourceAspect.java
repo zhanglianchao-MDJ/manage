@@ -17,8 +17,7 @@ import java.lang.reflect.Method;
 
 /**
  * 数据源切面处理
- * @author ZhouChenglin
- * @date 2018/2/7
+ * @author zcl<yczclcn@163.com>
  */
 @Aspect
 @Component

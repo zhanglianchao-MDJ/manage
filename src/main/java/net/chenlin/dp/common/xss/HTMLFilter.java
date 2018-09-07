@@ -9,11 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * HTMLFilter
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 下午12:01:14
+ * @author zcl<yczclcn@163.com>
  */
 public final class HTMLFilter {
 

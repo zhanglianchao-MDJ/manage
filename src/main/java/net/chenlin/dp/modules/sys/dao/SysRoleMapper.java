@@ -8,15 +8,16 @@ import net.chenlin.dp.modules.sys.entity.SysRoleEntity;
 
 /**
  * 系统角色
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月12日 上午12:35:51
+ * @author zcl<yczclcn@163.com>
  */
 @Mapper
 public interface SysRoleMapper extends BaseMapper<SysRoleEntity> {
-	
+
+	/**
+	 * 查询用户角色集合
+	 * @param userId
+	 * @return
+	 */
 	List<String> listUserRoles(Long userId);
 	
 }
