@@ -9,10 +9,7 @@
                 <a v-if="hasPermission('sys:menu:save')" class="btn btn-default" \@click="save"><i
                         class="fa fa-plus"></i>&nbsp;新增
                 </a>
-                <a v-if="hasPermission('sys:menu:edit')" class="btn btn-default" \@click="edit"><i
-                        class="fa fa-pencil-square-o"></i>&nbsp;编辑
-                </a>
-                <a v-if="hasPermission('sys:menu:remove')" class="btn btn-default" \@click="remove"><i
+                <a v-if="hasPermission('sys:menu:remove')" class="btn btn-default" \@click="remove(true)"><i
                         class="fa fa-trash-o"></i>&nbsp;删除
                 </a>
             </div>

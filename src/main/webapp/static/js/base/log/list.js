@@ -70,7 +70,19 @@ function getGrid() {
 		},  {
 			field : "gmtCreate",
 			title : "创建时间"
-		}]
+		}, {
+            title : "操作",
+            formatter : function (value, row, index) {
+                var _html = '';
+                if (hasPermission('sys:log:remove')) {
+                    _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                }
+                return _html;
+            }
+        }],
+        onPostBody: function() {
+            $('#dataGrid').bootstrapTable('expandAllRows');
+        }
 	})
 }
 
@@ -110,21 +122,27 @@ var vm = new Vue({
                 vm.dateRange = '';
             }
         },
-		remove: function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];	
-			if(checkedArray(ck)){
-				$.each(ck, function(idx, item){
-					ids[idx] = item.id;
-				});
-				$.RemoveForm({
-					url: '../../sys/log/remove?_' + $.now(),
-			    	param: ids,
-			    	success: function(data) {
-			    		vm.load();
-			    	}
-				});
-			}
-		},
+        remove: function(batch, id) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if(!checkedArray(ck)){
+                    return false;
+                }
+                $.each(ck, function(idx, item){
+                    ids[idx] = item.id;
+                });
+            } else {
+                ids.push(id);
+            }
+            $.RemoveForm({
+                url: '../../sys/log/remove?_' + $.now(),
+                param: ids,
+                success: function(data) {
+                    vm.load();
+                }
+            });
+        },
 		clear: function() {
 			$.ConfirmAjax({
 				msg : "您确定要清空日志吗？",

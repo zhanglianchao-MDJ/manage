@@ -13,6 +13,7 @@ function initialPage() {
 			height : $(window).height() - 56
 		});
 	});
+    vm.jobId = url("jobId");
 }
 
 function getGrid() {

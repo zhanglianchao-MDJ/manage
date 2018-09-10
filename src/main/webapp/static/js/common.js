@@ -48,6 +48,36 @@ function hasPermission(permission) {
     }
 }
 
+//返回满足权限的个数
+function cntPermission(permission) {
+    var  count = 0;
+    if(isNullOrEmpty(window.parent.perms)) {
+        return count;
+    }
+    $.each(permission, function(idx, item){
+        if (window.parent.perms.indexOf(item) > -1) {
+            count++;
+        }
+    });
+    return count;
+}
+
+//构造更多操作按钮
+function morePermissionOpt(cnt, opts) {
+    var _html = '', width = (cnt*82);
+    _html += '<div class="btn-group">' +
+        '<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="更多">' +
+        '<i class="fa fa-chevron-circle-right"></i>' +
+        '</a>';
+    _html += 	'<ul class="more-opt dropdown-menu" style="min-width: '+width+'px;left: -'+width+'px;">';
+    $.each(opts, function(idx, item){
+        _html += item;
+    });
+    _html += 	'</ul>';
+    _html += '</div>'
+    return _html;
+}
+
 toUrl = function(href) {
 	window.location.href = href;
 }
@@ -85,7 +115,7 @@ $.fn.bootstrapTreeTableEx = function(opt) {
         url: '',
         striped: true,
         sidePagination: 'server',
-        clickToSelect: true,
+        clickToSelect: false,
         idField: '',
         columns: [],
         treeShowField: '',

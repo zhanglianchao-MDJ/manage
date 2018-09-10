@@ -77,7 +77,22 @@ function getGrid() {
 		}, {
 			field : "remark",
 			title : "备注"
-		} ]
+		}, {
+            title : "操作",
+            formatter : function (value, row, index) {
+                var _html = '';
+                if (hasPermission('sys:area:edit')) {
+                    _html += '<a href="javascript:;" onclick="vm.edit(\''+row.areaId+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
+                }
+                if (hasPermission('sys:area:remove')) {
+                    _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.areaId+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                }
+                if (hasPermission('sys:area:save')) {
+                    _html += '<a href="javascript:;" onclick="vm.saveChild(\''+row.areaCode+'\',\''+row.name+'\')" title="新增下级区域"><i class="fa fa-plus-square"></i></a>';
+                }
+                return _html;
+            }
+        }  ]
 	})
 }
 
@@ -140,39 +155,57 @@ var vm = new Vue({
 				},
 			});
 		},
-		edit : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if (checkedRow(ck)) {
-				dialogOpen({
-					title : '编辑区域',
-					url : 'base/area/edit.html?_' + $.now(),
-					width : '500px',
-					height : '456px',
-					success : function(iframeId) {
-						top.frames[iframeId].vm.area.areaId = ck[0].areaId;
-						top.frames[iframeId].vm.setForm();
-					},
-					yes : function(iframeId) {
-						top.frames[iframeId].vm.acceptClick();
-					}
-				});
-			}
-		},
-		remove : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if (checkedArray(ck)) {
-				$.each(ck, function(idx, item) {
-					ids[idx] = item.areaId;
-				});
-				$.RemoveForm({
-					url : '../../sys/area/remove?_' + $.now(),
-					param : ids,
-					success : function(data) {
-						vm.load();
-					}
-				});
-			}
-		}
+        saveChild : function(areaCode, name) {
+            dialogOpen({
+                title : '新增区域',
+                url : 'base/area/add.html?_' + $.now(),
+                width : '500px',
+                height : '456px',
+                success : function(iframeId) {
+                    top.frames[iframeId].vm.area.parentCode = areaCode;
+                    top.frames[iframeId].vm.area.parentName = name;
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                }
+            });
+        },
+        edit : function(areaId) {
+            dialogOpen({
+                title : '编辑区域',
+                url : 'base/area/edit.html?_' + $.now(),
+                width : '500px',
+                height : '456px',
+                success : function(iframeId) {
+                    top.frames[iframeId].vm.area.areaId = areaId;
+                    top.frames[iframeId].vm.setForm();
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                }
+            });
+        },
+        remove : function(batch, areaId) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if (!checkedArray(ck)) {
+                    return false;
+                }
+                $.each(ck, function(idx, item) {
+                    ids[idx] = item.areaId;
+                });
+            } else {
+                ids.push(areaId);
+            }
+            $.RemoveForm({
+                url: '../../sys/area/remove?_' + $.now(),
+                param: ids,
+                success: function(data) {
+                    vm.load();
+                }
+            });
+        }
 	},
 	created : function() {
 		this.getArea(this.parentCode);

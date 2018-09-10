@@ -50,10 +50,19 @@ function getGrid() {
 			title : "状态",
 			width : "60px",
 			formatter : function(value, row, index) {
-                if(value === 0){
-                    return '<input type="checkbox" class="js-switch" data-id="'+row.jobId+'">';
-                }else if(value === 1){
-                    return '<input type="checkbox" class="js-switch" data-id="'+row.jobId+'" checked>';
+                if (row.status === 1) {
+                	if (hasPermission('quartz:job:disable')) {
+                        return '<input type="checkbox" class="js-switch" data-id="'+row.jobId+'" checked>';
+					} else {
+                        return '<i class="fa fa-toggle-on"></i>';
+                    }
+                }
+                if (row.status === 0) {
+                    if (hasPermission('quartz:job:enable')) {
+                        return '<input type="checkbox" class="js-switch" data-id="'+row.jobId+'">';
+                    } else {
+                        return '<i class="fa fa-toggle-off"></i>';
+                    }
                 }
 			}
 		}, {
@@ -63,7 +72,25 @@ function getGrid() {
 		}, {
 			field : "remark",
 			title : "备注"
-		} ],
+		}, {
+            title : "操作",
+            formatter : function(value, row, index) {
+                var _html = '';
+                if (hasPermission('quartz:job:edit')) {
+                    _html += '<a href="javascript:;" onclick="vm.edit(\''+row.jobId+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
+                }
+                if (hasPermission('quartz:job:run')) {
+                    _html += '<a href="javascript:;" onclick="vm.run(\''+row.jobId+'\')" title="立即运行一次"><i class="fa fa-forward"></i></a>';
+                }
+                if (hasPermission('quartz:job:remove')) {
+                    _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.jobId+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                }
+                if (hasPermission('quartz:log:list')) {
+                    _html += '<a href="log.html?jobId='+row.jobId+'" title="调度日志"><i class="fa fa-file-text-o"></i></a>';
+                }
+                return _html;
+            }
+        } ],
         onPostBody: function() {
             switchUtils.init({
                 selector: '.js-switch',
@@ -109,87 +136,54 @@ var vm = new Vue({
 				},
 			});
 		},
-		edit : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if (checkedRow(ck)) {
-				dialogOpen({
-					title : '编辑任务',
-					url : 'base/quartz/edit.html?_' + $.now(),
-					width : '450px',
-					height : '396px',
-					scroll : true,
-					success : function(iframeId) {
-						top.frames[iframeId].vm.job.jobId = ck[0].jobId;
-						top.frames[iframeId].vm.setForm();
-					},
-					yes : function(iframeId) {
-						top.frames[iframeId].vm.acceptClick();
-					},
-				});
-			}
-		},
-		remove : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if (checkedArray(ck)) {
-				$.each(ck, function(idx, item) {
-					ids[idx] = item.jobId;
-				});
-				$.RemoveForm({
-					url : '../../quartz/job/remove?_' + $.now(),
-					param : ids,
-					success : function(data) {
-						vm.load();
-					}
-				});
-			}
-		},
-		enable : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if (checkedArray(ck)) {
-				$.each(ck, function(idx, item) {
-					ids[idx] = item.jobId;
-				});
-				$.ConfirmForm({
-					msg : '您是否要启用所选任务吗？',
-					url : '../../quartz/job/enable?_' + $.now(),
-					param : ids,
-					success : function(data) {
-						vm.load();
-					}
-				});
-			}
-		},
-		disable : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if (checkedArray(ck)) {
-				$.each(ck, function(idx, item) {
-					ids[idx] = item.jobId;
-				});
-				$.ConfirmForm({
-					msg : '您是否要暂停所选任务吗？',
-					url : '../../quartz/job/disable?_' + $.now(),
-					param : ids,
-					success : function(data) {
-						vm.load();
-					}
-				});
-			}
-		},
-		run : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if (checkedArray(ck)) {
-				$.each(ck, function(idx, item) {
-					ids[idx] = item.jobId;
-				});
-				$.ConfirmForm({
-					msg : '您是否要立即运行所选任务吗？',
-					url : '../../quartz/job/run?_' + $.now(),
-					param : ids,
-					success : function(data) {
-						vm.load();
-					}
-				});
-			}
-		}
+        edit : function(jobId) {
+            dialogOpen({
+                title : '编辑任务',
+                url : 'base/quartz/edit.html?_' + $.now(),
+                width : '450px',
+                height : '396px',
+                scroll : true,
+                success : function(iframeId) {
+                    top.frames[iframeId].vm.job.jobId = jobId;
+                    top.frames[iframeId].vm.setForm();
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                },
+            });
+        },
+        remove : function(batch, jobId) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if (!checkedArray(ck)) {
+                    return false;
+                }
+                $.each(ck, function(idx, item) {
+                    ids[idx] = item.jobId;
+                });
+            } else {
+                ids.push(jobId);
+            }
+            $.RemoveForm({
+                url : '../../quartz/job/remove?_' + $.now(),
+                param : ids,
+                success : function(data) {
+                    vm.load();
+                }
+            });
+        },
+        run : function(jobId) {
+            var ids = [];
+            ids.push(jobId);
+            $.ConfirmForm({
+                msg : '您是否要立即运行所选任务吗？',
+                url : '../../quartz/job/run?_' + $.now(),
+                param : ids,
+                success : function(data) {
+                    vm.load();
+                }
+            });
+        }
 	}
 })

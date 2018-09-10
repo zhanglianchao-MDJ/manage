@@ -46,7 +46,30 @@ function getGrid() {
 		}, {
 			field : "gmtCreate",
 			title : "创建时间"
-		}]
+		}, {
+            title: "操作",
+            formatter: function (value, row, index) {
+                var _html = '';
+                if (hasPermission('sys:role:edit')) {
+                    _html += '<a href="javascript:;" onclick="vm.edit(\'' + row.roleId + '\')" title="编辑"><i class="fa fa-pencil"></i></a>';
+                }
+                if (hasPermission('sys:role:remove')) {
+                    _html += '<a href="javascript:;" onclick="vm.remove(false,\'' + row.roleId + '\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                }
+                var perms = cntPermission(['sys:role:authorizeOpt', 'sys:role:authorizeData']);
+                if (perms > 0) {
+                    var opts = [];
+                    if (hasPermission('sys:role:authorizeOpt')) {
+                        opts.push('<button class="btn btn-default btn-xs" onclick="vm.authorizeOpt(\'' + row.roleId + '\')"><i class="fa fa-gavel"></i>操作权限</button>');
+                    }
+                    if (hasPermission('sys:role:authorizeData')) {
+                        opts.push('<button class="btn btn-default btn-xs" onclick="vm.authorizeData(\'' + row.roleId + '\')"><i class="fa fa-eye"></i>数据权限</button>');
+                    }
+                    _html += morePermissionOpt(perms, opts);
+                }
+                return _html;
+            }
+        }]
 	})
 }
 
@@ -70,76 +93,73 @@ var vm = new Vue({
 				},
 			});
 		},
-		edit: function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if(checkedRow(ck)){
-				dialogOpen({
-					title: '编辑角色',
-					url: 'base/role/edit.html?_' + $.now(),
-					width: '420px',
-					height: '350px',
-					success: function(iframeId){
-						top.frames[iframeId].vm.role.roleId = ck[0].roleId;
-						top.frames[iframeId].vm.setForm();
-					},
-					yes: function(iframeId){
-						top.frames[iframeId].vm.acceptClick();
-					}
-				});
-			}
-		},
-		remove: function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];	
-			if(checkedArray(ck)){
-				$.each(ck, function(idx, item){
-					ids[idx] = item.roleId;
-				});
-				$.RemoveForm({
-					url: '../../sys/role/remove?_' + $.now(),
-			    	param: ids,
-			    	success: function(data) {
-			    		vm.load();
-			    	}
-				});
-			}
-		},
-		authorizeOpt: function(){
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if(checkedRow(ck)){
-				dialogOpen({
-					title: '操作权限',
-					url: 'base/role/opt.html?_' + $.now(),
-					scroll : true,
-					width: "300px",
-					height: "450px",
-					success: function(iframeId){
-						top.frames[iframeId].vm.role.roleId = ck[0].roleId;
-						top.frames[iframeId].vm.setForm();
-					},
-					yes : function(iframeId) {
-						top.frames[iframeId].vm.acceptClick();
-					}
-				})
-			}
-		},
-		authorizeData: function(){
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if(checkedRow(ck)){
-				dialogOpen({
-					title: '数据权限',
-					url: 'base/role/data.html?_' + $.now(),
-					scroll : true,
-					width: "300px",
-					height: "450px",
-					success: function(iframeId){
-						top.frames[iframeId].vm.role.roleId = ck[0].roleId;
-						top.frames[iframeId].vm.setForm();
-					},
-					yes : function(iframeId) {
-						top.frames[iframeId].vm.acceptClick();
-					}
-				})
-			}
-		}
+        edit: function (roleId) {
+            dialogOpen({
+                title: '编辑角色',
+                url: 'base/role/edit.html?_' + $.now(),
+                width: '420px',
+                height: '350px',
+                success: function (iframeId) {
+                    top.frames[iframeId].vm.role.roleId = roleId;
+                    top.frames[iframeId].vm.setForm();
+                },
+                yes: function (iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                }
+            });
+        },
+        remove: function (batch, roleId) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if (!checkedArray(ck)) {
+                    return false;
+                }
+                $.each(ck, function (idx, item) {
+                    ids[idx] = item.roleId;
+                });
+            } else {
+                ids.push(roleId);
+            }
+            $.RemoveForm({
+                url: '../../sys/role/remove?_' + $.now(),
+                param: ids,
+                success: function (data) {
+                    vm.load();
+                }
+            });
+        },
+        authorizeOpt: function (roleId) {
+            dialogOpen({
+                title: '操作权限',
+                url: 'base/role/opt.html?_' + $.now(),
+                scroll: true,
+                width: "300px",
+                height: "450px",
+                success: function (iframeId) {
+                    top.frames[iframeId].vm.role.roleId = roleId;
+                    top.frames[iframeId].vm.setForm();
+                },
+                yes: function (iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                }
+            })
+        },
+        authorizeData: function (roleId) {
+            dialogOpen({
+                title: '数据权限',
+                url: 'base/role/data.html?_' + $.now(),
+                scroll: true,
+                width: "300px",
+                height: "450px",
+                success: function (iframeId) {
+                    top.frames[iframeId].vm.role.roleId = roleId;
+                    top.frames[iframeId].vm.setForm();
+                },
+                yes: function (iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                }
+            })
+        }
 	}
 })

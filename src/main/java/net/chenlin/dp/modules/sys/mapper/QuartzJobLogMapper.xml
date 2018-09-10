@@ -17,6 +17,9 @@
 		FROM
 			quartz_job_log
 		<where>
+			<if test="jobId != null and jobId.trim() != ''">
+				AND job_id = #{jobId}
+			</if>
 			<if test="name != null and name.trim() != ''">
 				AND bean_name LIKE concat('%',#{name},'%')
 			</if>

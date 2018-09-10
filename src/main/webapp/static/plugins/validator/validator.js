@@ -1,15 +1,19 @@
 ﻿/**
-数据验证完整性
-**/
+ 数据验证完整性
+ **/
 $.fn.Validform = function () {
     var Validatemsg = "";
     var Validateflag = true;
     $(this).find("[isvalid=yes]").each(function () {
         var checkexpession = $(this).attr("checkexpession");
         var errormsg = $(this).attr("errormsg");
+        var placeholder = $(this).attr("placeholder");
         if (checkexpession != undefined) {
             if (errormsg == undefined) {
                 errormsg = "";
+                if (!(placeholder == undefined)) {
+                    errormsg = placeholder;
+                }
             }
             var value = $(this).val();
             if ($(this).hasClass('ui-select')) {
@@ -17,338 +21,338 @@ $.fn.Validform = function () {
             }
             switch (checkexpession) {
                 case "NotNull":
-                    {
-                        if (isNotNull(value)) {
-                            Validatemsg = errormsg + "不能为空！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (isNotNull(value)) {
+                        Validatemsg = errormsg + "不能为空！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Num":
-                    {
-                        if (!isInteger(value)) {
-                            Validatemsg = errormsg + "必须为数字！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isInteger(value)) {
+                        Validatemsg = errormsg + "必须为数字！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "NumOrNull":
-                    {
-                        if (!isIntegerOrNull(value)) {
-                            Validatemsg = errormsg + "必须为数字！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isIntegerOrNull(value)) {
+                        Validatemsg = errormsg + "必须为数字！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Email":
-                    {
-                        if (!isEmail(value)) {
-                            Validatemsg = errormsg + "必须为E-mail格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isEmail(value)) {
+                        Validatemsg = errormsg + "必须为E-mail格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "EmailOrNull":
-                    {
-                        if (!isEmailOrNull(value)) {
-                            Validatemsg = errormsg + "必须为E-mail格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isEmailOrNull(value)) {
+                        Validatemsg = errormsg + "必须为E-mail格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "EnglishStr":
-                    {
-                        if (!isEnglishStr(value)) {
-                            Validatemsg = errormsg + "必须为字符串！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isEnglishStr(value)) {
+                        Validatemsg = errormsg + "必须为字符串！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "EnglishStrOrNull":
-                    {
-                        if (!isEnglishStrOrNull(value)) {
-                            Validatemsg = errormsg + "必须为字符串！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isEnglishStrOrNull(value)) {
+                        Validatemsg = errormsg + "必须为字符串！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "LenNum":
-                    {
-                        if (!isLenNum(value, $(this).attr("length"))) {
-                            Validatemsg = errormsg + "必须为" + $(this).attr("length") + "位数字！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isLenNum(value, $(this).attr("length"))) {
+                        Validatemsg = errormsg + "必须为" + $(this).attr("length") + "位数字！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "LenNumOrNull":
-                    {
-                        if (!isLenNumOrNull(value, $(this).attr("length"))) {
-                            Validatemsg = errormsg + "必须为" + $(this).attr("length") + "位数字！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isLenNumOrNull(value, $(this).attr("length"))) {
+                        Validatemsg = errormsg + "必须为" + $(this).attr("length") + "位数字！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "LenStr":
-                    {
-                        if (!isLenStr(value, $(this).attr("length"))) {
-                            Validatemsg = errormsg + "必须小于" + $(this).attr("length") + "位字符！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isLenStr(value, $(this).attr("length"))) {
+                        Validatemsg = errormsg + "必须小于" + $(this).attr("length") + "位字符！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "LenStrOrNull":
-                    {
-                        if (!isLenStrOrNull(value, $(this).attr("length"))) {
-                            Validatemsg = errormsg + "必须小于" + $(this).attr("length") + "位字符！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isLenStrOrNull(value, $(this).attr("length"))) {
+                        Validatemsg = errormsg + "必须小于" + $(this).attr("length") + "位字符！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Phone":
-                    {
-                        if (!isTelephone(value)) {
-                            Validatemsg = errormsg + "必须电话格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isTelephone(value)) {
+                        Validatemsg = errormsg + "必须电话格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "PhoneOrNull":
-                    {
-                        if (!isTelephoneOrNull(value)) {
-                            Validatemsg = errormsg + "必须电话格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isTelephoneOrNull(value)) {
+                        Validatemsg = errormsg + "必须电话格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Fax":
-                    {
-                        if (!isTelephoneOrNull(value)) {
-                            Validatemsg = errormsg + "必须为传真格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isTelephoneOrNull(value)) {
+                        Validatemsg = errormsg + "必须为传真格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Mobile":
-                    {
-                        if (!isMobile(value)) {
-                            Validatemsg = errormsg + "必须为手机格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isMobile(value)) {
+                        Validatemsg = errormsg + "必须为手机格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "MobileOrNull":
-                    {
-                        if (!isMobileOrnull(value)) {
-                            Validatemsg = errormsg + "必须为手机格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isMobileOrnull(value)) {
+                        Validatemsg = errormsg + "必须为手机格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "MobileOrPhone":
-                    {
-                        if (!isMobileOrPhone(value)) {
-                            Validatemsg = errormsg + "必须为电话格式或手机格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isMobileOrPhone(value)) {
+                        Validatemsg = errormsg + "必须为电话格式或手机格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "MobileOrPhoneOrNull":
-                    {
-                        if (!isMobileOrPhoneOrNull(value)) {
-                            Validatemsg = errormsg + "必须为电话格式或手机格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isMobileOrPhoneOrNull(value)) {
+                        Validatemsg = errormsg + "必须为电话格式或手机格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Uri":
-                    {
-                        if (!isUri(value)) {
-                            Validatemsg = errormsg + "必须为网址格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isUri(value)) {
+                        Validatemsg = errormsg + "必须为网址格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "UriOrNull":
-                    {
-                        if (!isUriOrnull(value)) {
-                            Validatemsg = errormsg + "必须为网址格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isUriOrnull(value)) {
+                        Validatemsg = errormsg + "必须为网址格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Equal":
-                    {
-                        if (!isEqual(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "不相等！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isEqual(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "不相等！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Date":
-                    {
-                        if (!isDate(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为日期格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isDate(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为日期格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "DateOrNull":
-                    {
-                        if (!isDateOrNull(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为日期格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isDateOrNull(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为日期格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "DateTime":
-                    {
-                        if (!isDateTime(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为日期时间格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isDateTime(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为日期时间格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "DateTimeOrNull":
-                    {
-                        if (!isDateTimeOrNull(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为日期时间格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isDateTimeOrNull(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为日期时间格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Time":
-                    {
-                        if (!isTime(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为时间格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isTime(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为时间格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "TimeOrNull":
-                    {
-                        if (!isTimeOrNull(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为时间格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isTimeOrNull(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为时间格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "ChineseStr":
-                    {
-                        if (!isChinese(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为中文！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isChinese(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为中文！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "ChineseStrOrNull":
-                    {
-                        if (!isChineseOrNull(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为中文！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isChineseOrNull(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为中文！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Zip":
-                    {
-                        if (!isZip(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为邮编格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isZip(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为邮编格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "ZipOrNull":
-                    {
-                        if (!isZipOrNull(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为邮编格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isZipOrNull(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为邮编格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "Double":
-                    {
-                        if (!isDouble(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为小数！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isDouble(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为小数！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "DoubleOrNull":
-                    {
-                        if (!isDoubleOrNull(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为小数！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isDoubleOrNull(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为小数！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "IDCard":
-                    {
-                        if (!isIDCard(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为身份证格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isIDCard(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为身份证格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "IDCardOrNull":
-                    {
-                        if (!isIDCardOrNull(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为身份证格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isIDCardOrNull(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为身份证格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "IsIP":
-                    {
-                        if (!isIP(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为IP格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isIP(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为IP格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 case "IPOrNull":
-                    {
-                        if (!isIPOrNullOrNull(value, $(this).attr("eqvalue"))) {
-                            Validatemsg = errormsg + "必须为IP格式！\n";
-                            Validateflag = false;
-                            ValidationMessage($(this), Validatemsg); return false;
-                        }
-                        break;
+                {
+                    if (!isIPOrNullOrNull(value, $(this).attr("eqvalue"))) {
+                        Validatemsg = errormsg + "必须为IP格式！\n";
+                        Validateflag = false;
+                        ValidationMessage($(this), Validatemsg); return false;
                     }
+                    break;
+                }
                 default:
                     break;
             }
@@ -526,7 +530,7 @@ $.fn.Validform = function () {
             return true;
         }
     }
-    //验证是否手机号或电话号码 mobile phone 
+    //验证是否手机号或电话号码 mobile phone
     function isMobileOrPhone(obj) {
         reg_mobile = /^(\+\d{2,3}\-)?\d{11}$/;
         reg_phone = /^(\d{3,4}\-)?[1-9]\d{6,7}$/;
@@ -667,7 +671,7 @@ $.fn.Validform = function () {
             }
         }
     }
-    //判断输入的字符是否为中文 cchar 
+    //判断输入的字符是否为中文 cchar
     function isChinese(obj) {
         if (obj.length != 0) {
             reg = /^[\u0391-\uFFE5]+$/;
@@ -777,7 +781,7 @@ $.fn.Validform = function () {
     }
     //判断是否为IP地址格式
     function isIP(obj) {
-        var re = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g //匹配IP地址的正则表达式 
+        var re = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g //匹配IP地址的正则表达式
         if (re.test(obj)) {
             if (RegExp.$1 < 256 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256) return true;
         }
@@ -789,7 +793,7 @@ $.fn.Validform = function () {
         if (controlObj.length == 0 || controlObj == null || controlObj == undefined) {
             return true;
         }
-        var re = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g //匹配IP地址的正则表达式 
+        var re = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g //匹配IP地址的正则表达式
         if (re.test(obj)) {
             if (RegExp.$1 < 256 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256) return true;
         }
@@ -800,30 +804,17 @@ $.fn.Validform = function () {
 function ValidationMessage(obj, Validatemsg) {
     try {
         removeMessage(obj);
-//        dialogMsg(Validatemsg);
+        dialogToastr(Validatemsg);
         obj.focus();
-        var $poptip_error = $('<div class="poptip"><span class="poptip-arrow poptip-arrow-top"><em>◆</em></span>' + Validatemsg + '</div>').css("left", obj.offset().left + 'px').css("top", obj.offset().top + obj.parent().height() + 5 + 'px')
-        $('body').append($poptip_error);
-        if (obj.hasClass('form-control') || obj.hasClass('ui-select')) {
+        if (obj.hasClass('form-control')) {
             obj.parent().addClass('has-error');
-        }
-        if (obj.hasClass('ui-select')) {
-            $('.input-error').remove();
         }
         obj.change(function () {
             if (obj.val()) {
                 removeMessage(obj);
             }
-        }); 
-        if (obj.hasClass('ui-select')) {
-            $(document).click(function (e) {
-                if (obj.attr('data-value')) {
-                    removeMessage(obj);
-                }
-                e.stopPropagation();
-            });
-        }
-        return false;  
+        });
+        return false;
     } catch (e) {
         alert(e)
     }
@@ -831,6 +822,5 @@ function ValidationMessage(obj, Validatemsg) {
 //移除提示
 function removeMessage(obj) {
     obj.parent().removeClass('has-error');
-    $('.poptip').remove();
-    $('.input-error').remove();
+    top.layer.closeAll('dialog');
 }

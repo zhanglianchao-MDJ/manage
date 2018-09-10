@@ -23,7 +23,9 @@ public class ${className}Entity implements Serializable {
 	private ${column.fieldType} ${column.fieldName};
 	
 <% } %>
-
+    /**
+     * ${className}Entity constructor
+     */
 	public ${className}Entity() {
 		super();
 	}
@@ -43,6 +45,24 @@ public class ${className}Entity implements Serializable {
 	public ${column.fieldType} get${column.methodName}() {
 		return ${column.fieldName};
 	}
-	
+
 <% } %>
+    /**
+     * ${className}Entity.toString()
+     */
+    @Override
+    public String toString() {
+        return "${className}Entity{" +
+               <% for (column in columns) { %>
+               <% if (columnLP.first) { %>
+               "${column.fieldName}='" + ${column.fieldName} + '\'' +
+               <% } else { %>
+               ", ${column.fieldName}='" + ${column.fieldName} + '\'' +
+               <% } %>
+               <% if (columnLP.last) { %>
+               '}';
+               <% } %>
+               <% } %>
+    }
+
 }

@@ -53,7 +53,21 @@ function getGrid() {
             },
             {title: '排序', field: 'orderNum', width: '50px'},
             {title: '菜单URL', field: 'url', width: '200px'},
-            {title: '授权标识', field: 'perms'}
+            {title: '授权标识', field: 'perms'},
+            {title: '操作', formatter: function(value, row, index) {
+                    var _html = '';
+                    if (hasPermission('sys:menu:edit')) {
+                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.menuId+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
+                    }
+                    if (hasPermission('sys:area:remove')) {
+                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.menuId+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                    }
+                    if (hasPermission('sys:menu:save') && row.type !== 2) {
+                        _html += '<a href="javascript:;" onclick="vm.saveChild(\''+row.menuId+'\',\''+row.name+'\')" title="新增下级菜单"><i class="fa fa-plus-square"></i></a>';
+                    }
+                    return _html;
+                }
+            }
         ]
     });
 }
@@ -76,39 +90,59 @@ var vm = new Vue({
 				},
 			});
 		},
-		edit: function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if(checkedRow(ck)){
-				dialogOpen({
-					title: '编辑菜单',
-					url: 'base/menu/edit.html?_' + $.now(),
-					width: '600px',
-					height: '420px',
-					scroll : true,
-					success: function(iframeId){
-						top.frames[iframeId].vm.menu.menuId = ck[0].menuId;
-						top.frames[iframeId].vm.setForm();
-					},
-					yes : function(iframeId) {
-						top.frames[iframeId].vm.acceptClick();
-					},
-				});
-			}
-		},
-		remove: function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if(checkedArray(ck)){
-				$.each(ck, function(idx, item){
-					ids[idx] = item.menuId;
-				});
-				$.RemoveForm({
-					url: '../../sys/menu/remove?_' + $.now(),
-			    	param: ids,
-			    	success: function(data) {
-			    		vm.load();
-			    	}
-				});
-			}
-		}
+        saveChild: function(menuId, name) {
+            dialogOpen({
+                title: '新增菜单',
+                url: 'base/menu/add.html?_' + $.now(),
+                width: '600px',
+                height: '420px',
+                scroll : true,
+                success: function(iframeId){
+                    top.frames[iframeId].vm.menu.parentId = menuId;
+                    top.frames[iframeId].vm.menu.parentName = name;
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                },
+            });
+        },
+        edit: function(menuId) {
+            dialogOpen({
+                title: '编辑菜单',
+                url: 'base/menu/edit.html?_' + $.now(),
+                width: '600px',
+                height: '420px',
+                scroll : true,
+                success: function(iframeId){
+                    top.frames[iframeId].vm.menu.menuId = menuId;
+                    top.frames[iframeId].vm.setForm();
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                },
+            });
+        },
+        remove: function(batch, menuId) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if(!checkedArray(ck)){
+                    return false;
+                }
+                $.each(ck, function(idx, item){
+                    ids[idx] = item.menuId;
+                });
+            } else {
+                ids.push(menuId);
+            }
+            $.RemoveForm({
+                url: '../../sys/menu/remove?_' + $.now(),
+                param: ids,
+                success: function(data) {
+                    vm.load();
+                }
+            });
+
+        }
 	}
 })

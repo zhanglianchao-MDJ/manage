@@ -51,9 +51,20 @@ function getGrid() {
 			width : "60px",
             formatter : function(value , row, index) {
                 if(value === 0){
-                    return '<input type="checkbox" class="js-switch" data-id="'+row.userId+'">';
-                }else if(value === 1){
-                    return '<input type="checkbox" class="js-switch" data-id="'+row.userId+'" checked>';
+                	if (hasPermission('sys:user:disable')) {
+                        return '<input type="checkbox" class="js-switch" data-id="'+row.userId+'">';
+					} else {
+                        return '<i class="fa fa-toggle-off"></i>';
+					}
+
+                }
+                if(value === 1){
+                	if (hasPermission('sys:user:enable')) {
+                        return '<input type="checkbox" class="js-switch" data-id="'+row.userId+'" checked>';
+					} else {
+                        return '<i class="fa fa-toggle-on"></i>';
+					}
+
                 }
             }
 		}, {
@@ -63,7 +74,22 @@ function getGrid() {
 		}, {
 			field : "remark",
 			title : "备注"
-		} ],
+		}, {
+            title : "操作",
+            formatter : function(value, row, index) {
+                var _html = '';
+                if (hasPermission('sys:user:edit')) {
+                    _html += '<a href="javascript:;" onclick="vm.edit(\''+row.userId+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
+                }
+                if (hasPermission('sys:user:resetPassword')) {
+                    _html += '<a href="javascript:;" onclick="vm.reset(\''+row.userId+'\')" title="重置密码"><i class="fa fa-key"></i></a>';
+                }
+                if (hasPermission('sys:user:remove')) {
+                    _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.userId+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                }
+                return _html;
+            }
+        } ],
         onPostBody: function() {
             switchUtils.init({
                 selector: '.js-switch',
@@ -109,88 +135,56 @@ var vm = new Vue({
 				},
 			});
 		},
-		edit : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if (checkedRow(ck)) {
-				dialogOpen({
-					title : '编辑用户',
-					url : 'base/user/edit.html?_' + $.now(),
-                    width : '500px',
-                    height : '456px',
-					scroll : true,
-					success : function(iframeId) {
-						top.frames[iframeId].vm.user.userId = ck[0].userId;
-						top.frames[iframeId].vm.setForm();
-					},
-					yes : function(iframeId) {
-						top.frames[iframeId].vm.acceptClick();
-					},
-				});
-			}
-		},
-		remove : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if (checkedArray(ck)) {
-				$.each(ck, function(idx, item) {
-					ids[idx] = item.userId;
-				});
-				$.RemoveForm({
-					url : '../../sys/user/remove?_' + $.now(),
-					param : ids,
-					success : function(data) {
-						vm.load();
-					}
-				});
-			}
-		},
-		disable : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if (checkedArray(ck)) {
-				$.each(ck, function(idx, item) {
-					ids[idx] = item.userId;
-				});
-				$.ConfirmForm({
-					msg : '您是否要禁用所选账户吗？',
-					url : '../../sys/user/disable?_' + $.now(),
-					param : ids,
-					success : function(data) {
-						vm.load();
-					}
-				});
-			}
-		},
-		enable : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if (checkedArray(ck)) {
-				$.each(ck, function(idx, item) {
-					ids[idx] = item.userId;
-				});
-				$.ConfirmForm({
-					msg : '您是否要启用所选账户吗？',
-					url : '../../sys/user/enable?_' + $.now(),
-					param : ids,
-					success : function(data) {
-						vm.load();
-					}
-				});
-			}
-		},
-		reset : function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if (checkedRow(ck)) {
-				dialogOpen({
-					title : '重置密码',
-					url : 'base/user/reset.html?_' + $.now(),
-					width : '400px',
-					height : '220px',
-					success : function(iframeId) {
-						top.frames[iframeId].vm.user.userId = ck[0].userId;
-					},
-					yes : function(iframeId) {
-						top.frames[iframeId].vm.acceptClick();
-					},
-				});
-			}
-		}
+        edit : function(userId) {
+            dialogOpen({
+                title : '编辑用户',
+                url : 'base/user/edit.html?_' + $.now(),
+                width : '500px',
+                height : '456px',
+                scroll : true,
+                success : function(iframeId) {
+                    top.frames[iframeId].vm.user.userId = userId;
+                    top.frames[iframeId].vm.setForm();
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                },
+            });
+        },
+        remove : function(batch, userId) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if (!checkedArray(ck)) {
+                    return false;
+                }
+                $.each(ck, function(idx, item) {
+                    ids[idx] = item.userId;
+                });
+            } else {
+                ids.push(userId);
+            }
+            $.RemoveForm({
+                url : '../../sys/user/remove?_' + $.now(),
+                param : ids,
+                success : function(data) {
+                    vm.load();
+                }
+            });
+        },
+        reset : function(userId) {
+            dialogOpen({
+                title : '重置密码',
+                url : 'base/user/reset.html?_' + $.now(),
+                width : '400px',
+                height : '220px',
+                success : function(iframeId) {
+                    top.frames[iframeId].vm.user.userId = userId;
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                },
+            });
+        }
 	}
 })

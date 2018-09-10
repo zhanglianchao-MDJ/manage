@@ -54,7 +54,21 @@ function getGrid() {
                     }
                 }
             },
-            {title: '备注', field: 'remark'}
+            {title: '备注', field: 'remark'},
+            {title: '操作', formatter: function(value, row, index) {
+                    var _html = '';
+                    if (hasPermission('sys:macro:edit')) {
+                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.macroId+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
+                    }
+                    if (hasPermission('sys:macro:remove')) {
+                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.macroId+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                    }
+                    if (hasPermission('sys:macro:save') && row.type === 0) {
+                        _html += '<a href="javascript:;" onclick="vm.saveChild(\''+row.macroId+'\',\''+row.name+'\')" title="新增字典数据"><i class="fa fa-navicon"></i></a>';
+                    }
+                    return _html;
+                }
+            }
         ],
         onPostBody: function() {
             switchUtils.init({
@@ -96,39 +110,57 @@ var vm = new Vue({
 				},
 			});
 		},
-		edit: function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections');
-			if(checkedRow(ck)){
-				dialogOpen({
-					title: '编辑字典',
-					url: 'base/macro/edit.html?_' + $.now(),
-					width: '600px',
-					height: '420px',
-					scroll : true,
-					success: function(iframeId){
-						top.frames[iframeId].vm.macro.macroId = ck[0].macroId;
-						top.frames[iframeId].vm.setForm();
-					},
-					yes : function(iframeId) {
-						top.frames[iframeId].vm.acceptClick();
-					},
-				});
-			}
+        saveChild: function(macroId, name) {
+            dialogOpen({
+                title: '新增字典',
+                url: 'base/macro/add.html?_' + $.now(),
+                width: '600px',
+                height: '420px',
+                scroll : true,success: function(iframeId){
+                    top.frames[iframeId].vm.macro.typeId = macroId;
+                    top.frames[iframeId].vm.macro.typeName = name;
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                },
+            });
+        },
+		edit: function(macroId) {
+            dialogOpen({
+                title: '编辑字典',
+                url: 'base/macro/edit.html?_' + $.now(),
+                width: '600px',
+                height: '420px',
+                scroll : true,
+                success: function(iframeId){
+                    top.frames[iframeId].vm.macro.macroId = macroId;
+                    top.frames[iframeId].vm.setForm();
+                },
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.acceptClick();
+                },
+            });
 		},
-		remove: function() {
-			var ck = $('#dataGrid').bootstrapTable('getSelections'), ids = [];
-			if(checkedArray(ck)){
-				$.each(ck, function(idx, item){
-					ids[idx] = item.macroId;
-				});
-				$.RemoveForm({
-					url: '../../sys/macro/remove?_' + $.now(),
-			    	param: ids,
-			    	success: function(data) {
-			    		vm.load();
-			    	}
-				});
-			}
-		}
+        remove: function(batch, macroId) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if(!checkedArray(ck)){
+                    return false;
+                }
+                $.each(ck, function(idx, item){
+                    ids[idx] = item.macroId;
+                });
+            } else {
+                ids.push(macroId);
+            }
+            $.RemoveForm({
+                url: '../../sys/macro/remove?_' + $.now(),
+                param: ids,
+                success: function(data) {
+                    vm.load();
+                }
+            });
+        }
 	}
 })
