@@ -3,6 +3,7 @@ package net.chenlin.dp.modules.sys.quartz;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.util.ReflectionUtils;
 
 import net.chenlin.dp.common.exception.RRException;
@@ -12,6 +13,7 @@ import net.chenlin.dp.common.utils.SpringContextUtils;
  * 执行定时任务
  * @author zcl<yczclcn@163.com>
  */
+@DependsOn("springContextUtils")
 public class ScheduleRunnable implements Runnable {
 	
 	private Object target;

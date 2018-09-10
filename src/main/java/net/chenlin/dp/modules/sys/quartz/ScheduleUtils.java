@@ -16,11 +16,13 @@ import net.chenlin.dp.common.exception.RRException;
 import net.chenlin.dp.common.utils.JSONUtils;
 import net.chenlin.dp.common.utils.SpringContextUtils;
 import net.chenlin.dp.modules.sys.entity.QuartzJobEntity;
+import org.springframework.context.annotation.DependsOn;
 
 /**
  * 定时任务工具类
  * @author zcl<yczclcn@163.com>
  */
+@DependsOn("springContextUtils")
 public class ScheduleUtils {
     
 	private static Scheduler scheduler = (Scheduler) SpringContextUtils.getBean("scheduler");

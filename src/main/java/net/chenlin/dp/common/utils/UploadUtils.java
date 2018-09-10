@@ -3,6 +3,7 @@ package net.chenlin.dp.common.utils;
 import net.chenlin.dp.common.support.properties.GlobalProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -18,6 +19,7 @@ import java.util.UUID;
  * 文件上传工具类
  * @author zcl<yczclcn@163.com>
  */
+@DependsOn("springContextUtils")
 public class UploadUtils {
 
     private static Logger LOG = LoggerFactory.getLogger(UploadUtils.class);

@@ -11,6 +11,7 @@ import net.chenlin.dp.modules.sys.quartz.ScheduleUtils;
 import net.chenlin.dp.modules.sys.service.QuartzJobService;
 import org.quartz.CronTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ import java.util.Map;
  * 定时任务
  * @author zcl<yczclcn@163.com>
  */
+@DependsOn("springContextUtils")
 @Service("quartzJobService")
 public class QuartzJobServiceImpl implements QuartzJobService {
 	

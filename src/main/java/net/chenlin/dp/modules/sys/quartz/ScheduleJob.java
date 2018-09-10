@@ -10,6 +10,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import net.chenlin.dp.common.utils.JSONUtils;
@@ -21,6 +22,7 @@ import net.chenlin.dp.modules.sys.entity.QuartzJobLogEntity;
  * 定时任务
  * @author zcl<yczclcn@163.com>
  */
+@DependsOn("springContextUtils")
 public class ScheduleJob extends QuartzJobBean {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
