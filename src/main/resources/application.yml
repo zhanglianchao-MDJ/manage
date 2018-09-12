@@ -10,6 +10,7 @@ server:
 global:
   upload-location: /Users/zhouchenglin/dev/dp-boot/ #文件上传目录
   upload-mapping: /upload/ #文件上传目录访问路径
+  redis-session-dao: false #是否使用使用redis会话管理器，true为开启，false为关闭
 
 spring:
   # 环境 dev:开发环境|test:测试环境|prod:生成环境

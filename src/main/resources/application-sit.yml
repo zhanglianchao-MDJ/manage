@@ -36,3 +36,15 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  reids:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 1000
+    jedis:
+      pool:
+        max-active: 6000
+        max-wait: 1000
+        max-idle: 400
+

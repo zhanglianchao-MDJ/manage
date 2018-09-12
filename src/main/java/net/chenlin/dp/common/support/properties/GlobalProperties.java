@@ -20,6 +20,9 @@ public class GlobalProperties {
     /** 文件上传目录访问路径 **/
     private String uploadMapping;
 
+    /** 是否开启redis会话管理器 **/
+    private boolean redisSessionDao;
+
     /**
      * WebConfig注册上传路径
      * @return
@@ -57,4 +60,13 @@ public class GlobalProperties {
     public void setUploadMapping(String uploadMapping) {
         this.uploadMapping = uploadMapping;
     }
+
+    public boolean isRedisSessionDao() {
+        return redisSessionDao;
+    }
+
+    public void setRedisSessionDao(boolean redisSessionDao) {
+        this.redisSessionDao = redisSessionDao;
+    }
+
 }

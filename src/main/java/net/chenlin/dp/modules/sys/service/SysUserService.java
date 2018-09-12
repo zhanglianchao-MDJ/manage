@@ -3,6 +3,7 @@ package net.chenlin.dp.modules.sys.service;
 import net.chenlin.dp.common.entity.Page;
 import net.chenlin.dp.common.entity.R;
 import net.chenlin.dp.modules.sys.entity.SysUserEntity;
+import net.chenlin.dp.modules.sys.entity.SysUserTokenEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -104,5 +105,33 @@ public interface SysUserService {
 	 * @return
 	 */
 	List<Long> listAllOrgId(Long userId);
+
+	/**
+	 * 保存用户token
+	 * @param userId
+	 * @return
+	 */
+	int saveOrUpdateToken(Long userId, String token);
+
+	/**
+	 * 根据token查询
+	 * @param token
+	 * @return
+	 */
+	SysUserTokenEntity getUserTokenByToken(String token);
+
+	/**
+	 * 根据userId查询
+	 * @param userId
+	 * @return
+	 */
+	SysUserTokenEntity getUserTokenByUserId(Long userId);
+
+	/**
+	 * 根据userId查询：用于token校验
+	 * @param userId
+	 * @return
+	 */
+	SysUserEntity getUserByIdForToken(Long userId);
 	
 }

@@ -1,8 +1,13 @@
 package net.chenlin.dp.common.support.config;
 
+import net.chenlin.dp.common.support.properties.GlobalProperties;
+import net.chenlin.dp.common.support.shiro.listener.UserSessionListener;
+import net.chenlin.dp.common.support.shiro.session.UserSessionDAO;
+import net.chenlin.dp.common.support.shiro.session.UserSessionFactory;
 import net.chenlin.dp.modules.sys.shiro.UserFilter;
 import net.chenlin.dp.modules.sys.shiro.UserRealm;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -12,16 +17,16 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * shiro配置
  * @author zcl<yczclcn@163.com>
  */
+@DependsOn("springContextUtils")
 @Configuration
 public class ShiroConfig {
 
@@ -43,11 +48,19 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public SessionManager sessionManager(){
+    public SessionManager sessionManager(GlobalProperties globalProperties){
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionValidationSchedulerEnabled(true);
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         sessionManager.setDeleteInvalidSessions(true);
+        if (globalProperties.isRedisSessionDao()) {
+            // 开启redis会话管理器
+            sessionManager.setSessionFactory(new UserSessionFactory());
+            sessionManager.setSessionDAO(new UserSessionDAO());
+            List<SessionListener> sessionListeners = new ArrayList<>();
+            sessionListeners.add(new UserSessionListener());
+            sessionManager.setSessionListeners(sessionListeners);
+        }
         return sessionManager;
     }
 
@@ -62,6 +75,7 @@ public class ShiroConfig {
 
     /**
      * shiro过滤器
+     * /rest/**，请求采用token验证（net.chenlin.dp.common.support.interceptor.RestApiInterceptor）
      * @param securityManager
      * @return
      */
@@ -85,6 +99,7 @@ public class ShiroConfig {
         filterMap.put("/static/**", "anon");
         filterMap.put("/error/**", "anon");
         filterMap.put("/login", "anon");
+        filterMap.put("/rest/**", "anon");
         filterMap.put("/**", "user");
         shiroFilter.setFilterChainDefinitionMap(filterMap);
 

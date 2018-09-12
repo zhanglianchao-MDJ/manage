@@ -1,16 +1,15 @@
 package net.chenlin.dp.modules.sys.service.impl;
 
+import net.chenlin.dp.common.constant.RestApiConstant;
 import net.chenlin.dp.common.constant.SystemConstant;
 import net.chenlin.dp.common.entity.Page;
 import net.chenlin.dp.common.entity.Query;
 import net.chenlin.dp.common.entity.R;
 import net.chenlin.dp.common.utils.CommonUtils;
 import net.chenlin.dp.common.utils.MD5Utils;
-import net.chenlin.dp.modules.sys.dao.SysMenuMapper;
-import net.chenlin.dp.modules.sys.dao.SysRoleMapper;
-import net.chenlin.dp.modules.sys.dao.SysUserMapper;
-import net.chenlin.dp.modules.sys.dao.SysUserRoleMapper;
+import net.chenlin.dp.modules.sys.dao.*;
 import net.chenlin.dp.modules.sys.entity.SysUserEntity;
+import net.chenlin.dp.modules.sys.entity.SysUserTokenEntity;
 import net.chenlin.dp.modules.sys.service.SysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,9 @@ public class SysUserServiceImpl implements SysUserService {
 
 	@Autowired
 	private SysUserRoleMapper sysUserRoleMapper;
+
+	@Autowired
+	private SysUserTokenMapper sysUserTokenMapper;
 
 	/**
 	 * 分页查询用户列表
@@ -223,6 +225,56 @@ public class SysUserServiceImpl implements SysUserService {
 		user.setPassword(MD5Utils.encrypt(currUser.getUsername(), user.getPassword()));
 		int count = sysUserMapper.updatePswd(user);
 		return CommonUtils.msg(count);
+	}
+
+	/**
+	 * 保存用户token
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public int saveOrUpdateToken(Long userId, String token) {
+		Date now = new Date();
+		Date expire = new Date(now.getTime() + RestApiConstant.TOKEN_EXPIRE);
+		SysUserTokenEntity sysUserTokenEntity = new SysUserTokenEntity();
+		sysUserTokenEntity.setUserId(userId);
+		sysUserTokenEntity.setGmtModified(now);
+		sysUserTokenEntity.setGmtExpire(expire);
+		sysUserTokenEntity.setToken(token);
+		int count = sysUserTokenMapper.update(sysUserTokenEntity);
+		if (count == 0) {
+			return sysUserTokenMapper.save(sysUserTokenEntity);
+		}
+		return count;
+	}
+
+	/**
+	 * 根据token查询
+	 * @param token
+	 * @return
+	 */
+	@Override
+	public SysUserTokenEntity getUserTokenByToken(String token) {
+		return sysUserTokenMapper.getByToken(token);
+	}
+
+	/**
+	 * 根据userId查询
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public SysUserTokenEntity getUserTokenByUserId(Long userId) {
+		return sysUserTokenMapper.getByUserId(userId);
+	}
+
+	/**
+	 * 根据userId查询：用于token校验
+	 * @param userId
+	 * @return
+	 */
+	public SysUserEntity getUserByIdForToken(Long userId) {
+		return sysUserMapper.getObjectById(userId);
 	}
 
 }
