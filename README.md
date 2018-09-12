@@ -16,6 +16,12 @@
 - 基于角色的权限管理，支持操作权限和持数据权限
 - 基于Maven模块化开发，可快速扩展个性化业务模块
 - 封装常用开发组件，目前已集成select2、switchery及富文本组件
+### REST接口支持
+- 接口请求链接拦截模式：/rest/**，所有接口请求地址以/rest为前缀即可
+- 匿名访问接口通过增加@RestAnon注解即可
+- 登录地址/rest/auth，通过校验后可获取token
+- 调用/rest/authStatus异步校验token状态
+- token所有合法性参数在服务端管理，可自行扩展校验，比如时间戳，限制ip，UA检测等策略
 ### 项目拓展
 - [基于系统参数管理实现动态select控件](https://my.oschina.net/zhouchenglin/blog/1615653)
 - [基于ajaxfileupload.js实现文件上传](https://my.oschina.net/zhouchenglin/blog/1615214)
