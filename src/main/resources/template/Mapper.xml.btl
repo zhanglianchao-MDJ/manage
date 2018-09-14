@@ -47,7 +47,7 @@
 	 	<set>
 <% for(column in columns!) { %>
 <% if(column.columnName != pk.columnName) { %>
-			<if test="${column.fieldName} != null">`${column.columnName}` = #{$column.fieldName}<% if(!columnLP.last) { %>, <% } %></if>
+			<if test="${column.fieldName} != null">`${column.columnName}` = #{${column.fieldName}}<% if(!columnLP.last) { %>, <% } %></if>
 <% } %>
 <% } %>
 		</set>
