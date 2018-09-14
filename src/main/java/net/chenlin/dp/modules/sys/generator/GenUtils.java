@@ -28,8 +28,6 @@ public class GenUtils {
 		templates.add("template/Entity.java.btl");
 		templates.add("template/Mapper.java.btl");
 		templates.add("template/Mapper.xml.btl");
-		templates.add("template/Manager.java.btl");
-		templates.add("template/ManagerImpl.java.btl");
 		templates.add("template/Service.java.btl");
 		templates.add("template/ServiceImpl.java.btl");
 		templates.add("template/Controller.java.btl");
@@ -172,14 +170,6 @@ public class GenUtils {
 			return packagePath + className + "Mapper.xml";
 		}
 
-		if (template.contains(GenConstant.JAVA_MANAGER)) {
-			return packagePath + className + "Manager.java";
-		}
-
-		if (template.contains(GenConstant.JAVA_MANAGER_IMPL)) {
-			return packagePath + className + "ManagerImpl.java";
-		}
-
 		if (template.contains(GenConstant.JAVA_SERVICE)) {
 			return packagePath + className + "Service.java";
 		}
@@ -243,14 +233,6 @@ public class GenUtils {
 
 		if (template.contains(GenConstant.XML_MAPPER)) {
 			return packagePath + "dao" + File.separator + className + "Mapper.xml";
-		}
-
-		if (template.contains(GenConstant.JAVA_MANAGER)) {
-			return packagePath + "manager" + File.separator + className + "Manager.java";
-		}
-
-		if (template.contains(GenConstant.JAVA_MANAGER_IMPL)) {
-			return packagePath + "manager" + File.separator + "impl" + File.separator + className + "ManagerImpl.java";
 		}
 
 		if (template.contains(GenConstant.JAVA_SERVICE)) {

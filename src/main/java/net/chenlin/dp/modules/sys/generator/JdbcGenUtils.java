@@ -145,14 +145,6 @@ public class JdbcGenUtils {
             return packagePath + "mapper/" + className + "Mapper.xml";
         }
 
-        if (template.contains(GenConstant.JAVA_MANAGER)) {
-            return packagePath + "manager/" + className + "Manager.java";
-        }
-
-        if (template.contains(GenConstant.JAVA_MANAGER_IMPL)) {
-            return packagePath + "manager/impl/" + className + "ManagerImpl.java";
-        }
-
         if (template.contains(GenConstant.JAVA_SERVICE)) {
             return packagePath + "service/" + className + "Service.java";
         }
