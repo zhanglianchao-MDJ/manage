@@ -618,3 +618,14 @@ switchUtils = {
         return $($switch.selector).data(key);
     }
 }
+
+/** 页面loading **/
+dialogLoading(true);
+
+document.addEventListener('DOMContentLoaded', function(){
+    dialogLoading(false)
+});
+
+setTimeout(function() {
+    dialogLoading(false)
+}, 1000);
