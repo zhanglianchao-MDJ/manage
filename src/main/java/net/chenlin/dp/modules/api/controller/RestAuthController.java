@@ -1,6 +1,9 @@
 package net.chenlin.dp.modules.api.controller;
 
-import net.chenlin.dp.common.annotation.RestAnon;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import net.chenlin.dp.common.constant.RestApiConstant;
 import net.chenlin.dp.common.entity.R;
 import net.chenlin.dp.common.utils.MD5Utils;
@@ -12,12 +15,15 @@ import net.chenlin.dp.modules.sys.service.SysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * rest授权controller
  * @author zcl<yczclcn@163.com>
  */
+@Api(value = "用户授权", description = "用户授权")
 @RestController
 public class RestAuthController extends AbstractController {
 
@@ -28,16 +34,17 @@ public class RestAuthController extends AbstractController {
      * 登录授权校验
      * @return
      */
-    @RequestMapping(RestApiConstant.AUTH_REQUEST)
-    public R auth() {
-        String username = getParam("username").trim();
-        String password = getParam("password").trim();
+    @ApiOperation(value = "登录")
+    @ApiImplicitParam(name = "token", value = "授权码")
+    @RequestMapping(value = RestApiConstant.AUTH_REQUEST, method = RequestMethod.POST)
+    public R auth(@ApiParam(name = "username", value = "用户名") @RequestParam String username,
+                  @ApiParam(name = "password", value = "密码") @RequestParam String password) {
         // 用户名为空
-        if (StringUtils.isBlank(username)) {
+        if (StringUtils.isBlank(username.trim())) {
             return RestApiConstant.TokenErrorEnum.USER_USERNAME_NULL.getResp();
         }
         // 密码为空
-        if (StringUtils.isBlank(password)) {
+        if (StringUtils.isBlank(password.trim())) {
             return RestApiConstant.TokenErrorEnum.USER_PASSWORD_NULL.getResp();
         }
         // 用户名不存在
@@ -69,11 +76,11 @@ public class RestAuthController extends AbstractController {
      * 异步校验token，用于接口异步校验登录状态
      * @return
      */
-    @RequestMapping(RestApiConstant.AUTH_CHECK)
-    public R authStatus() {
-        String token = getParam(RestApiConstant.AUTH_TOKEN);
+    @ApiOperation(value = "校验token是否可用")
+    @RequestMapping(value = RestApiConstant.AUTH_CHECK, method = RequestMethod.POST)
+    public R authStatus(@ApiParam(name = "token", value = "授权码") @RequestParam String token) {
         // token为空
-        if (StringUtils.isBlank(token)) {
+        if (StringUtils.isBlank(token.trim())) {
             return RestApiConstant.TokenErrorEnum.TOKEN_NOT_FOUND.getResp();
         }
         SysUserTokenEntity sysUserTokenEntity = sysUserService.getUserTokenByToken(token);
@@ -95,25 +102,6 @@ public class RestAuthController extends AbstractController {
             return RestApiConstant.TokenErrorEnum.USER_DISABLE.getResp();
         }
         return RestApiConstant.TokenErrorEnum.TOKEN_ENABLE.getResp();
-    }
-
-    /**
-     * 验证拦截
-     * @return
-     */
-    @RequestMapping("/rest/testAuth")
-    public String test() {
-        return "auth token";
-    }
-
-    /**
-     * 匿名调用：@RestAnon
-     * @return
-     */
-    @RequestMapping("/rest/testAnon")
-    @RestAnon
-    public String testAnon() {
-        return "rest anon";
     }
 
 }

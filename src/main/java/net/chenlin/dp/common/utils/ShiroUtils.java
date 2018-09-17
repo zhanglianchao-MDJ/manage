@@ -77,4 +77,15 @@ public class ShiroUtils {
 		SecurityUtils.getSubject().logout();
 	}
 
+	/**
+	 * 获取验证码
+	 * @param key
+	 * @return
+	 */
+	public static String getKaptcha(String key) {
+		String kaptcha = getSessionAttribute(key).toString();
+		getSession().removeAttribute(key);
+		return kaptcha;
+	}
+
 }

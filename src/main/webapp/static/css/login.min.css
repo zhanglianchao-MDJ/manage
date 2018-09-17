@@ -54,10 +54,7 @@ a.logo{
     position: relative;
 }
 
-input[type=text],
-input[type=file],
-input[type=password],
-input[type=email], select {
+.loginInput {
     border: 1px solid #DCDEE0;
     vertical-align: middle;
     border-radius: 3px;
@@ -122,4 +119,12 @@ hr.hr20 {
     font-size: 12px;
     color: #666;
     text-align: center;
+}
+
+.codeInput{
+    width:60%;border-top-right-radius: 0;border-bottom-right-radius: 0;float:left;
+}
+
+.codeImg{
+    width:40%;cursor:pointer;float:left;
 }

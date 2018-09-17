@@ -7,6 +7,9 @@
     <artifactId>dp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <!-- 生成war时放开注释，以及第58行注释
+    <packaging>war</packaging>
+    -->
 
     <name>dp-lte-boot</name>
     <description>dp-lte开发框架SpringBoot版本</description>
@@ -39,6 +42,9 @@
         <quartz-version>2.2.3</quartz-version>
         <httpclient-version>4.5.3</httpclient-version>
         <beetl-version>1.1.60.RELEASE</beetl-version>
+        <swagger-version>2.9.2</swagger-version>
+        <servlet-version>3.1.0</servlet-version>
+        <kaptcha-version>2.3.2</kaptcha-version>
     </properties>
 
     <dependencies>
@@ -50,6 +56,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 生成war时放开注释
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+            -->
         </dependency>
         <dependency>
             <groupId>com.ibeetl</groupId>
@@ -157,6 +171,27 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>${kaptcha-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

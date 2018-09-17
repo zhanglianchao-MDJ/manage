@@ -1,6 +1,7 @@
 package net.chenlin.dp.common.support.config;
 
 import net.chenlin.dp.common.support.properties.BeetlProperties;
+import net.chenlin.dp.common.support.properties.GlobalProperties;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.ext.spring.BeetlGroupUtilConfiguration;
 import org.beetl.ext.spring.BeetlSpringViewResolver;
@@ -18,6 +19,9 @@ public class BeetlConfig {
     @Autowired
     BeetlProperties beetlProperties;
 
+    @Autowired
+    GlobalProperties globalProperties;
+
     /**
      * beetl的配置
      */
@@ -26,6 +30,7 @@ public class BeetlConfig {
         BeetlGroupUtilConfiguration beetlGroupUtilConfiguration = new BeetlGroupUtilConfiguration();
         beetlGroupUtilConfiguration.setResourceLoader(new ClasspathResourceLoader(BeetlConfig.class.getClassLoader(), beetlProperties.getPrefix()));
         beetlGroupUtilConfiguration.setConfigProperties(beetlProperties.getProperties());
+        beetlGroupUtilConfiguration.setSharedVars(globalProperties.getBeetlGlobalVars());
         return beetlGroupUtilConfiguration;
     }
 

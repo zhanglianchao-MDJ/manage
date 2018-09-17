@@ -1,9 +1,12 @@
 package net.chenlin.dp.modules.sys.controller;
 
+import com.google.code.kaptcha.Constants;
 import net.chenlin.dp.common.annotation.SysLog;
+import net.chenlin.dp.common.support.properties.GlobalProperties;
 import net.chenlin.dp.common.utils.MD5Utils;
 import net.chenlin.dp.common.utils.ShiroUtils;
 import net.chenlin.dp.modules.sys.service.SysUserService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,9 @@ public class SysLoginController extends AbstractController {
 
 	@Autowired
 	private SysUserService sysUserService;
+
+	@Autowired
+	private GlobalProperties globalProperties;
 
 	/**
 	 * 跳转登录页面
@@ -44,6 +50,29 @@ public class SysLoginController extends AbstractController {
 		String username = getParam("username").trim();
 		String password = getParam("password").trim();
 		try {
+			// 开启验证码
+			if (globalProperties.isKaptchaEnable()) {
+				String code = getParam("code").trim();
+				if (StringUtils.isBlank(code)) {
+					model.addAttribute("errorMsg", "验证码不能为空");
+					return html("/login");
+				}
+				String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
+				if (!code.equalsIgnoreCase(kaptcha)) {
+					model.addAttribute("errorMsg", "验证码错误");
+					return html("/login");
+				}
+			}
+			// 用户名验证
+			if (StringUtils.isBlank(username)) {
+				model.addAttribute("errorMsg", "用户名不能为空");
+				return html("/login");
+			}
+			// 密码验证
+			if (StringUtils.isBlank(password)) {
+				model.addAttribute("errorMsg", "密码不能为空");
+				return html("/login");
+			}
 			UsernamePasswordToken token = new UsernamePasswordToken(username, MD5Utils.encrypt(username, password));
 			ShiroUtils.getSubject().login(token);
 			SecurityUtils.getSubject().getSession().setAttribute("sessionFlag", true);

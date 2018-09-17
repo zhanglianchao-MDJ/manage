@@ -1,5 +1,7 @@
 package net.chenlin.dp.common.support.config;
 
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.util.Config;
 import net.chenlin.dp.common.support.interceptor.RestApiInterceptor;
 import net.chenlin.dp.common.support.properties.GlobalProperties;
 import net.chenlin.dp.common.xss.XssFilter;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.DispatcherType;
 import java.io.File;
+import java.util.Properties;
 
 /**
  * web配置
@@ -50,6 +53,8 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
         }
         registry.addResourceHandler(globalProperties.getRegisterUploadMapping())
                 .addResourceLocations(globalProperties.getRegisterUploadLocation());
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     /**
@@ -103,4 +108,23 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
         ErrorPage sysError = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error/500");
         registry.addErrorPages(notFound, sysError);
     }
+
+    /**
+     * 验证码生成相关
+     */
+    @Bean
+    public DefaultKaptcha kaptcha() {
+        Properties properties = new Properties();
+        properties.put("kaptcha.border", "no");
+        properties.put("kaptcha.textproducer.font.color", "black");
+        properties.put("kaptcha.image.width", "136");
+        properties.put("kaptcha.image.height", "50");
+        properties.put("kaptcha.textproducer.char.space", "3");
+        properties.put("kaptcha.textproducer.font.names", "宋体,楷体,微软雅黑");
+        Config config = new Config(properties);
+        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
+        defaultKaptcha.setConfig(config);
+        return defaultKaptcha;
+    }
+
 }

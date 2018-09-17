@@ -114,7 +114,7 @@ var vm = new Vue({
 				btn : [ '确定', '取消' ],
 				btnAlign : 'c',
 				yes : function() {
-					toUrl('/logout');
+					toUrl('logout');
 				}
 			});
 		}
