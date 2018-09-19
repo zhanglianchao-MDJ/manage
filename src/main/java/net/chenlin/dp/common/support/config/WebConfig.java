@@ -20,8 +20,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.DispatcherType;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -77,7 +77,6 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
         registration.setFilter(new DelegatingFilterProxy("shiroFilter"));
         //该值缺省为false，表示生命周期由SpringApplicationContext管理，设置为true则表示由ServletContainer管理
         registration.addInitParameter("targetFilterLifecycle", "true");
-        registration.setEnabled(true);
         registration.setOrder(Integer.MAX_VALUE - 1);
         registration.addUrlPatterns("/*");
         return registration;
@@ -89,12 +88,10 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
      */
     @Bean
     public FilterRegistrationBean xssFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setDispatcherTypes(DispatcherType.REQUEST);
-        registration.setFilter(new XssFilter());
+        XssFilter xssFilter = new XssFilter();
+//        xssFilter.setUrlExclusion(Arrays.asList("/rest/testAnon"));
+        FilterRegistrationBean registration = new FilterRegistrationBean(xssFilter);
         registration.addUrlPatterns("/*");
-        registration.setName("xssFilter");
-        registration.setOrder(Integer.MAX_VALUE);
         return registration;
     }
 
