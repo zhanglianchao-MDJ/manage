@@ -28,10 +28,6 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
       enabled: true
-  mvc:
-    static-path-pattern: /static/**
-  resources: # 指定静态资源的路径
-    static-locations: classpath:/static/
 
 # Mybatis配置
 mybatis:

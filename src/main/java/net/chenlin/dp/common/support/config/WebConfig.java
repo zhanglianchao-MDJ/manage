@@ -21,7 +21,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -91,6 +90,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
         XssFilter xssFilter = new XssFilter();
 //        xssFilter.setUrlExclusion(Arrays.asList("/rest/testAnon"));
         FilterRegistrationBean registration = new FilterRegistrationBean(xssFilter);
+        registration.setOrder(Integer.MAX_VALUE);
         registration.addUrlPatterns("/*");
         return registration;
     }
