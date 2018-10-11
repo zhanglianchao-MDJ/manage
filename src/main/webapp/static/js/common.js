@@ -484,6 +484,10 @@ $.fn.selectBindEx = function(opt) {
         url: option.url,
         data: null,
         success: function(r) {
+            if ($select.hasClass("select2-hidden-accessible")) {
+                $select.empty();
+                $select.select2('destroy');
+            }
             selectControl = $select.select2(option);
             $.each(r, function(idx, item){
                 selectControl.append("<option value='"+item[option.value]+"'>"+item[option.text]+"</option>");
