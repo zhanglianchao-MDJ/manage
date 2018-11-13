@@ -15,6 +15,11 @@ global:
   redis-session-dao: false #是否使用使用redis会话管理器，true为开启，false为关闭
   kaptcha-enable: true #是否开启验证码，true为开启，false为关闭
 
+# jwt配置
+jwt:
+  secret: dp  #jwt密钥
+  expiration: 604800  #过期时间,秒
+
 spring:
   # 环境 sit:集成测试环境|pre:预生产环境|prd:生成环境
   profiles:

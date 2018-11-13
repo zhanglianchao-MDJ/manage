@@ -1,10 +1,10 @@
 package net.chenlin.dp.modules.sys.service.impl;
 
-import net.chenlin.dp.common.constant.RestApiConstant;
 import net.chenlin.dp.common.constant.SystemConstant;
 import net.chenlin.dp.common.entity.Page;
 import net.chenlin.dp.common.entity.Query;
 import net.chenlin.dp.common.entity.R;
+import net.chenlin.dp.common.support.properties.JwtProperties;
 import net.chenlin.dp.common.utils.CommonUtils;
 import net.chenlin.dp.common.utils.MD5Utils;
 import net.chenlin.dp.modules.sys.dao.*;
@@ -38,6 +38,9 @@ public class SysUserServiceImpl implements SysUserService {
 
 	@Autowired
 	private SysUserTokenMapper sysUserTokenMapper;
+
+	@Autowired
+	private JwtProperties jwtProperties;
 
 	/**
 	 * 分页查询用户列表
@@ -235,7 +238,7 @@ public class SysUserServiceImpl implements SysUserService {
 	@Override
 	public int saveOrUpdateToken(Long userId, String token) {
 		Date now = new Date();
-		Date expire = new Date(now.getTime() + RestApiConstant.TOKEN_EXPIRE);
+		Date expire = new Date(now.getTime() + jwtProperties.getExpiration() * 1000);
 		SysUserTokenEntity sysUserTokenEntity = new SysUserTokenEntity();
 		sysUserTokenEntity.setUserId(userId);
 		sysUserTokenEntity.setGmtModified(now);
@@ -273,6 +276,7 @@ public class SysUserServiceImpl implements SysUserService {
 	 * @param userId
 	 * @return
 	 */
+	@Override
 	public SysUserEntity getUserByIdForToken(Long userId) {
 		return sysUserMapper.getObjectById(userId);
 	}
