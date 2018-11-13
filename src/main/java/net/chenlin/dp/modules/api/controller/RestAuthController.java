@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import net.chenlin.dp.common.constant.RestApiConstant;
 import net.chenlin.dp.common.entity.R;
-import net.chenlin.dp.common.utils.CommonUtils;
 import net.chenlin.dp.common.utils.JwtUtils;
 import net.chenlin.dp.common.utils.MD5Utils;
 import net.chenlin.dp.common.utils.TokenUtils;
