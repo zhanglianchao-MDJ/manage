@@ -48,8 +48,8 @@ public class JwtUtilsTest {
         Assert.assertEquals(jwtUserId, userId);
 
         // 混淆密钥
-        String jwtRadomKey = jwtUtils.getMd5Key(token);
-        Assert.assertEquals(jwtRadomKey, randomKey);
+        String jwtRandomKey = jwtUtils.getMd5Key(token);
+        Assert.assertEquals(jwtRandomKey, randomKey);
 
     }
 
