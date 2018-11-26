@@ -4,7 +4,9 @@ import net.chenlin.dp.common.support.properties.GlobalProperties;
 import net.chenlin.dp.common.support.shiro.listener.UserSessionListener;
 import net.chenlin.dp.common.support.shiro.session.UserSessionDAO;
 import net.chenlin.dp.common.support.shiro.session.UserSessionFactory;
+import net.chenlin.dp.modules.sys.shiro.ShiroPermsFilterFactoryBean;
 import net.chenlin.dp.modules.sys.shiro.UserFilter;
+import net.chenlin.dp.modules.sys.shiro.UserPermFilter;
 import net.chenlin.dp.modules.sys.shiro.UserRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.SessionListener;
@@ -81,7 +83,7 @@ public class ShiroConfig {
      */
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
-        ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
+        ShiroPermsFilterFactoryBean shiroFilter = new ShiroPermsFilterFactoryBean();
         shiroFilter.setSecurityManager(securityManager);
 
         shiroFilter.setLoginUrl("/login");
@@ -91,17 +93,17 @@ public class ShiroConfig {
         shiroFilter.setUnauthorizedUrl("/error/403");
 
         //user过滤器，处理ajax请求超时不跳转情况
-        Map<String, Filter> filters = new HashMap<>();
+        Map<String, Filter> filters = new HashMap<>(2);
         filters.put("user", new UserFilter());
+        filters.put("perms", new UserPermFilter());
         shiroFilter.setFilters(filters);
 
-        Map<String, String> filterMap = new LinkedHashMap<>();
+        Map<String, String> filterMap = new LinkedHashMap<>(5);
         filterMap.put("/static/**", "anon");
         filterMap.put("/error/**", "anon");
         filterMap.put("/login", "anon");
         filterMap.put("/captcha.jpg", "anon");
         filterMap.put("/rest/**", "anon");
-        filterMap.put("/**", "user");
         shiroFilter.setFilterChainDefinitionMap(filterMap);
 
         return shiroFilter;
