@@ -101,7 +101,7 @@ public class ShiroConfig {
         Map<String, String> filterMap = new LinkedHashMap<>(5);
         filterMap.put("/static/**", "anon");
         filterMap.put("/error/**", "anon");
-        filterMap.put("/login", "anon");
+        filterMap.put("/login", "authc");
         filterMap.put("/captcha.jpg", "anon");
         filterMap.put("/rest/**", "anon");
         shiroFilter.setFilterChainDefinitionMap(filterMap);

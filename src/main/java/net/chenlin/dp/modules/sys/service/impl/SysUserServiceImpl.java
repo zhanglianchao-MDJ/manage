@@ -5,8 +5,10 @@ import net.chenlin.dp.common.entity.Page;
 import net.chenlin.dp.common.entity.Query;
 import net.chenlin.dp.common.entity.R;
 import net.chenlin.dp.common.support.properties.JwtProperties;
+import net.chenlin.dp.common.support.redis.RedisCacheManager;
 import net.chenlin.dp.common.utils.CommonUtils;
 import net.chenlin.dp.common.utils.MD5Utils;
+import net.chenlin.dp.common.utils.SpringContextUtils;
 import net.chenlin.dp.modules.sys.dao.*;
 import net.chenlin.dp.modules.sys.entity.SysUserEntity;
 import net.chenlin.dp.modules.sys.entity.SysUserTokenEntity;
@@ -83,6 +85,9 @@ public class SysUserServiceImpl implements SysUserService {
 	@Override
 	public R saveUser(SysUserEntity user) {
 		user.setPassword(MD5Utils.encrypt(user.getUsername(), user.getPassword()));
+		RedisCacheManager redisCacheManager = (RedisCacheManager) SpringContextUtils.getBean("redisCacheManager");
+		boolean flag =redisCacheManager.hasKey(user.getUsername());
+		redisCacheManager.set(user.getUsername(),user);
 		int count = sysUserMapper.save(user);
 		Query query = new Query();
 		query.put("userId", user.getUserId());

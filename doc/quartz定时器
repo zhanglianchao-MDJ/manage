@@ -1,0 +1,217 @@
+quartz定时任务（数据库需要的表）
+Quartz将Job保存在数据库中所需表的说明
+QRTZ_CALENDARS 以 Blob 类型存储 Quartz 的 Calendar 信息
+
+QRTZ_CRON_TRIGGERS 存储 Cron Trigger，包括 Cron表达式和时区信息
+
+QRTZ_FIRED_TRIGGERS 存储与已触发的 Trigger 相关的状态信息，以及相联 Job的执行信息 QRTZ_PAUSED_TRIGGER_GRPS 存储已暂停的 Trigger 组的信息
+
+QRTZ_SCHEDULER_STATE 存储少量的有关 Scheduler 的状态信息，和别的 Scheduler实例(假如是用于一个集群中)
+
+QRTZ_LOCKS 存储程序的悲观锁的信息(假如使用了悲观锁)
+
+QRTZ_JOB_DETAILS 存储每一个已配置的 Job 的详细信息
+
+QRTZ_JOB_LISTENERS 存储有关已配置的 JobListener 的信息
+
+QRTZ_SIMPLE_TRIGGERS 存储简单的Trigger，包括重复次数，间隔，以及已触的次数
+
+QRTZ_BLOG_TRIGGERS Trigger 作为 Blob 类型存储(用于 Quartz 用户用 JDBC创建他们自己定制的 Trigger 类型，JobStore 并不知道如何存储实例的时候)
+
+QRTZ_TRIGGER_LISTENERS 存储已配置的 TriggerListener 的信息
+
+QRTZ_TRIGGERS 存储已配置的 Trigger 的信息
+
+quartz 持久化数据库表格字段解释
+建表,SQL语句在quartz-1.6.6\docs\dbTables文件夹中可以找到,介绍下主要的几张表：
+       表qrtz_job_details: 保存job详细信息,该表需要用户根据实际情况初始化
+       job_name:集群中job的名字,该名字用户自己可以随意定制,无强行要求
+       job_group:集群中job的所属组的名字,该名字用户自己随意定制,无强行要求
+       job_class_name:集群中个note job实现类的完全包名,quartz就是根据这个路径到classpath找到该job类
+       is_durable:是否持久化,把该属性设置为1，quartz会把job持久化到数据库中
+       job_data:一个blob字段，存放持久化job对象
+
+       表qrtz_triggers: 保存trigger信息
+       trigger_name: trigger的名字,该名字用户自己可以随意定制,无强行要求
+       trigger_group:trigger所属组的名字,该名字用户自己随意定制,无强行要求
+       job_name: qrtz_job_details表job_name的外键
+       job_group: qrtz_job_details表job_group的外键
+       trigger_state:当前trigger状态，设置为ACQUIRED,如果设置为WAITING,则job不会触发
+       trigger_cron:触发器类型,使用cron表达式
+
+       表qrtz_cron_triggers:存储cron表达式表
+       trigger_name: qrtz_triggers表trigger_name的外键
+       trigger_group: qrtz_triggers表trigger_group的外键
+       cron_expression:cron表达式
+
+       表qrtz_scheduler_state:存储集群中note实例信息，quartz会定时读取该表的信息判断集群中每个实例的当前状态
+       instance_name:之前配置文件中org.quartz.scheduler.instanceId配置的名字，就会写入该字段，如果设置为AUTO,quartz会根据物理机名和当前时间产生一个名字
+       last_checkin_time:上次检查时间
+       checkin_interval:检查间隔时间
+
+
+ 配置quartz.properties文件：
+#调度标识名 集群中每一个实例都必须使用相同的名称 org.quartz.scheduler.instanceName = scheduler
+
+#ID设置为自动获取 每一个必须不同 org.quartz.scheduler.instanceId = AUTO
+
+#数据保存方式为持久化 org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
+
+#数据库平台 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.oracle.weblogic.WebLogicOracleDelegate #数据库别名 随便取org.quartz.jobStore.dataSource = myXADS
+
+#表的前缀 org.quartz.jobStore.tablePrefix = QRTZ_
+
+#设置为TRUE不会出现序列化非字符串类到 BLOB 时产生的类版本问题 org.quartz.jobStore.useProperties = true
+
+#加入集群 org.quartz.jobStore.isClustered = true
+
+#调度实例失效的检查时间间隔 org.quartz.jobStore.clusterCheckinInterval = 20000
+
+#容许的最大作业延长时间 org.quartz.jobStore.misfireThreshold = 60000
+
+#ThreadPool 实现的类名 org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
+
+#线程数量 org.quartz.threadPool.threadCount = 10
+
+#线程优先级 org.quartz.threadPool.threadPriority = 5
+
+#自创建父线程 org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread = true
+
+#设置数据源org.quartz.dataSource.myXADS.jndiURL = CT
+
+#jbdi类名 org.quartz.dataSource.myXADS.java.naming.factory.initial = weblogic.jndi.WLInitialContextFactory #URLorg.quartz.dataSource.myXADS.java.naming.provider.url = t3://localhost:7001
+注】：在J2EE工程中如果想用数据库管理Quartz的相关信息，就一定要配置数据源，这是Quartz的要求。
+---------------------
+原文：https://blog.csdn.net/fly_captain/article/details/83058147
+
+=============================================================================================================
+
+前言
+
+Quartz默认提供了11张表，本文将对这几张表做简要的分析。
+
+表信息
+
+
+
+共11张表，前6张都是关于各种triggers的信息，后面包括job，悲观锁，调度状态等信息；相关表操作在类StdJDBCDelegate中，相关sql语句在StdJDBCConstants中；
+
+1.qrtz_blob_triggers
+
+自定义的triggers使用blog类型进行存储，非自定义的triggers不会存放在此表中，Quartz提供的triggers包括：CronTrigger，CalendarIntervalTrigger，
+
+DailyTimeIntervalTrigger以及SimpleTrigger，这几个trigger信息会保存在后面的几张表中；
+
+2.qrtz_cron_triggers
+
+存储CronTrigger，这也是我们使用最多的触发器，在配置文件中做如下配置，即可在qrtz_cron_triggers生成记录：
+
+
+
+表达式指定了每隔6秒执行一次，然后指定了要执行的task，task指定了要执行的业务，运行之后可以查看数据表：
+
+
+
+myScheduler是在定义SchedulerFactoryBean时指定的名称，其他字段都可以在上面的配置中找到；
+
+3.qrtz_simple_triggers
+
+存储SimpleTrigger，在配置文件中做如下配置，即可在qrtz_simple_triggers生成记录：
+
+
+
+指定了开始延迟时间，重复间隔时间已经重复的次数限制，查看表如下：
+
+
+
+TIMES_TRIGGERED用来记录执行了多少次了，此值被定义在SimpleTriggerImpl中，每次执行+1，这里定义的REPEAT_COUNT=5，实际情况会执行6次，具体可以查看SimpleTriggerImpl源码：
+
+
+
+timesTriggered默认值为0，当timesTriggered > repeatCount停止trigger，所以会执行6次，当执行完毕之后此记录会被删除；
+
+4.qrtz_simprop_triggers
+
+存储CalendarIntervalTrigger和DailyTimeIntervalTrigger两种类型的触发器，使用CalendarIntervalTrigger做如下配置：
+
+
+
+CalendarIntervalTrigger没有对应的FactoryBean，直接设置实现类CalendarIntervalTriggerImpl；指定的重复周期是1，默认单位是天，也就是每天执行一次，查看表如下：
+
+
+
+提供了3个string类型的参数，2个int类型的参数，2个long类型的参数，2个decimal类型的参数以及2个boolean类型的参数；具体每个参数是什么含义，根据不同的trigger类型存放各自的参数；
+
+5.qrtz_fired_triggers
+
+存储已经触发的trigger相关信息，trigger随着时间的推移状态发生变化，直到最后trigger执行完成，从表中被删除；已SimpleTrigger为例重复3次执行，查询表：
+
+
+
+相同的trigger和task，每触发一次都会创建一个实例；从刚被创建的ACQUIRED状态，到EXECUTING状态，最后执行完从数据库中删除；
+
+6.qrtz_triggers
+
+存储定义的trigger，以上定义的三个triggers为例，分别是：firstSimpleTrigger，firstCalendarTrigger和firstCronTrigger，运行之后查看数据库：
+
+
+
+和qrtz_fired_triggers存放的不一样，不管trigger触发了多少次都只有一条记录，TRIGGER_STATE用来标识当前trigger的状态；firstCalendarTask每天执行一次，执行完之后一直是WAITING状态；firstCronTrigger每6秒执行一次状态是ACQUIRED状态；firstSimpleTrigger重复执行6次后状态为COMPLETE，并且会被删除；
+
+7.qrtz_job_details
+
+存储jobDetails信息，相关信息在定义的时候指定，如上面定义的JobDetailFactoryBean，查询数据库：
+
+
+
+JOB_DATA存放的就是定义task时指定的jobDataMap属性，所以此属性需要实现Serializable接口，方便持久化到数据库；
+
+8.qrtz_calendars
+
+Quartz为我们提供了日历的功能，可以自己定义一个时间段，可以控制触发器在这个时间段内触发或者不触发；现在提供6种类型：AnnualCalendar，CronCalendar，DailyCalendar，HolidayCalendar，MonthlyCalendar，WeeklyCalendar；以下使用CronCalendar为例：
+
+
+
+定义了一个排除每隔5秒的CronCalendar，然后在firstCronTrigger中指定了calendarName，并且需要在SchedulerFactoryBean中定义calendars；因为firstCronTrigger每6秒执行一次，而CronCalendar排除每隔5秒，所以会出现firstCronTrigger在第5次触发的时候需要等待12秒，结果如下：
+
+
+
+查询保存在数据中的CronCalendar：
+
+
+
+CALENDAR存放的是CronCalendar序列化之后的数据；
+
+9.qrtz_paused_trigger_grps
+
+存放暂停掉的触发器，测试手动暂停firstCronTrigger，代码如下：
+
+
+
+启动之后延迟4秒后暂停firstCronTrigger，这里传递的参数group，然后查看数据库：
+
+
+
+因为已经入库，所以重启之后firstCronGroup还是处于暂停状态，firstCronTrigger不会运行；
+
+10.qrtz_scheduler_state
+
+存储所有节点的scheduler，会定期检查scheduler是否失效，启动多个scheduler，查询数据库：
+
+
+
+记录了最后最新的检查时间，在quartz.properties中设置了CHECKIN_INTERVAL为1000，也就是每秒检查一次；
+
+11.qrtz_locks
+
+Quartz提供的锁表，为多个节点调度提供分布式锁，实现分布式调度，默认有2个锁：
+
+
+
+STATE_ACCESS主要用在scheduler定期检查是否失效的时候，保证只有一个节点去处理已经失效的scheduler；
+
+TRIGGER_ACCESS主要用在TRIGGER被调度的时候，保证只有一个节点去执行调度；
+
+总结
+
+本文对这11张表做了简要的分析，介绍了每张表具体是用来存储什么的，并且给了简单的实例；其实如果要实现一个trigger的管理系统，其实也就是对这几张表的维护。
